@@ -4,10 +4,11 @@ import Vapor
 struct RouteController: RouteCollection {
     
     let ac: AssessmentController
-     
+    let settings: ConfigurationSettings
     
-    init(passports: Passports) {
+    init(passports: Passports, settings: ConfigurationSettings) {
         self.ac = AssessmentController(passports: passports)
+        self.settings = settings
     }
     
     func boot(routes: RoutesBuilder) throws {
@@ -16,7 +17,7 @@ struct RouteController: RouteCollection {
 
     private func newInstance(_ req: Request) async throws -> Response {
         guard let aidStr = req.parameters.get("aid"),
-              let aid = try Int(BenCrypt.decode(aidStr))
+              let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys))
         else {
             throw Abort(.badRequest, reason: "Invalid assessment token")
         }

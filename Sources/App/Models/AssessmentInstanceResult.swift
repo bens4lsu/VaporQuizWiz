@@ -12,7 +12,7 @@ final class AssessmentInstanceResult: Model, Content {
     @Field(key: "AssessmentID")
     var assessmentId: Int
     
-    @Field(key: "AssessmentInstandID")
+    @Field(key: "AssessmentInstanceID")
     var assessmentInstanceId: Int
     
     @Field(key: "PassportDomainType")

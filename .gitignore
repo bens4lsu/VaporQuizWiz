@@ -8,3 +8,5 @@ db.sqlite
 .swiftpm
 .env
 Sources/App/Controllers/BenCryptKeys.swift
+Package.resolved
+Resources/Config.json

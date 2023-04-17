@@ -10,15 +10,15 @@ import Vapor
 
 class BenCrypt {
         
-    class func encode(_ text:String) throws -> String {
-        let key = SymmetricKey(data: BenCrypt.keyStr.data(using: .utf8)!)
-        let nonce = try AES.GCM.Nonce(data: iv.data(using: .utf8)!)
+    class func encode(_ text:String, keys: ConfigurationSettings.CryptKeys) throws -> String {
+        let key = SymmetricKey(data: keys.keyStr.data(using: .utf8)!)
+        let nonce = try AES.GCM.Nonce(data: keys.iv.data(using: .utf8)!)
         let encrypted = try AES.GCM.seal(text.data(using: .utf8)!, using: key, nonce: nonce)
         return encrypted.combined!.base64EncodedString()
     }
     
-    class func decode(_ text:String) throws -> String {
-        let key = SymmetricKey(data: BenCrypt.keyStr.data(using: .utf8)!)
+    class func decode(_ text:String, keys: ConfigurationSettings.CryptKeys) throws -> String {
+        let key = SymmetricKey(data: keys.keyStr.data(using: .utf8)!)
         guard let cipherdata = Data(base64Encoded: text, options: .ignoreUnknownCharacters) else {
             throw Abort (.internalServerError, reason: "Bad ciphertext passed to BenCrypt.decode")
         }
