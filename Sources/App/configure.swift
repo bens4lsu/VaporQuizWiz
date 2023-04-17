@@ -1,6 +1,4 @@
-import Fluent
-import FluentMySQLDriver
-import Leaf
+
 import Vapor
 
 // configures your application
@@ -11,8 +9,11 @@ public func configure(_ app: Application) throws {
     
     let walkawayPassport = try PassportModel(app, forPassportType: .walkaway)
     let expansionPassport = try PassportModel(app, forPassportType: .expansion)
+    let passports: Passports = [.walkaway: walkawayPassport, .expansion: expansionPassport]
     
     
     // register routes
-    try routes(app)
+
+    try routes(app, passports)
+    
 }

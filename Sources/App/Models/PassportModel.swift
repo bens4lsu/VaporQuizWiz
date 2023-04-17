@@ -8,14 +8,15 @@
 import Foundation
 import Vapor
 
+typealias Passports = [PassportType: PassportModel]
 
-enum PassportDomainResult: String, CaseIterable {
+enum PassportDomainResult: String, CaseIterable, Codable {
     case red
     case yellow
     case green
 }
 
-enum PassportType {
+enum PassportType: String, Codable {
     case walkaway
     case expansion
     
@@ -29,7 +30,7 @@ enum PassportType {
     }
 }
 
-enum PassportDomainType: String {
+enum PassportDomainType: String, Codable {
     case readiness
     case foundation
     case resource
@@ -37,7 +38,7 @@ enum PassportDomainType: String {
 }
 
 
-class PassportDomain {
+final class PassportDomain: Content, Codable {
     var domainType: PassportDomainType
     var labels: [String]
     var resultParagraphs: [PassportDomainResult: String]
@@ -78,7 +79,7 @@ class PassportDomain {
     }
 }
 
-class PassportModel {
+final class PassportModel: Content, Codable {
     let passportType: PassportType
     let domains: [PassportDomain]
     
@@ -87,6 +88,10 @@ class PassportModel {
         self.domains = try self.passportType.domainList.map { try PassportDomain(app, for: $0) }
     }
 }
+
+
+
+
 
 
 
