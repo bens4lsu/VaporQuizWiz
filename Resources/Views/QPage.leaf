@@ -226,7 +226,7 @@
                 </div>Your #capitalized(domain.domainType) Mindset &mdash; Where do You Want to Be — GOAL?
               </div>
               <div class="ans-block ans-row-block">
-                #indexedValue(domain.labels, 0)
+                #indexedValue(domain.labels, 4)
                 <div class="ans-col-block">
                   <div class="ans-box">
                     <div class="ans-number">
@@ -246,7 +246,7 @@
                 </div>
               </div>
               <div class="ans-block ans-row-block">
-                #indexedValue(domain.labels, 1)
+                #indexedValue(domain.labels, 5)
                 <div class="ans-col-block">
                   <div class="ans-box">
                     <div class="ans-number">
@@ -266,7 +266,7 @@
                 </div>
               </div>
               <div class="ans-block ans-row-block">
-                #indexedValue(domain.labels, 2)
+                #indexedValue(domain.labels, 6)
                 <div class="ans-col-block">
                   <div class="ans-box">
                     <div class="ans-number">
@@ -286,7 +286,7 @@
                 </div>
               </div>
               <div class="ans-block ans-row-block">
-                #indexedValue(domain.labels, 3)
+                #indexedValue(domain.labels, 7)
                 <div class="ans-col-block">
                   <div class="ans-box">
                     <div class="ans-number">
