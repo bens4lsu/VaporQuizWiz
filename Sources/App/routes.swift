@@ -1,19 +1,8 @@
 import Fluent
 import Vapor
 
-func routes(_ app: Application, _ passports: Passports, _ settings: ConfigurationSettings) throws {
-    app.get { req async throws in
-        try await req.view.render("index", ["title": "Hello Vapor!"])
-    }
+func routes(_ app: Application, _ passports: Passports, _ settings: ConfigurationSettings, _ logger: Logger) throws {
     
-    app.get { req async in
-        "It works!"
-    }
-
-    app.get("hello") { req async -> String in
-        "Hello, world!"
-    }
-    
-    try app.register(collection: RouteController(passports: passports, settings: settings))
+    try app.register(collection: WebRouteController(passports: passports, settings: settings, logger: logger))
     
 }

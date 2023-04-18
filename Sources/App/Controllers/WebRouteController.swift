@@ -1,14 +1,16 @@
 import Fluent
 import Vapor
 
-struct RouteController: RouteCollection {
+struct WebRouteController: RouteCollection {
     
     let ac: AssessmentController
     let settings: ConfigurationSettings
+    let logger: Logger
     
-    init(passports: Passports, settings: ConfigurationSettings) {
+    init(passports: Passports, settings: ConfigurationSettings, logger: Logger) {
         self.ac = AssessmentController(passports: passports)
         self.settings = settings
+        self.logger = logger
     }
     
     func boot(routes: RoutesBuilder) throws {

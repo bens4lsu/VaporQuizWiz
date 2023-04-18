@@ -15,10 +15,10 @@ public func configure(_ app: Application) throws {
     
     let settings = ConfigurationSettings()
     
-    #if DEBUG
-    var logger = Logger(label: "email.job.logger")
+    var logger = Logger(label: "logger")
     logger.logLevel = settings.loggerLogLevel
-    logger.warning("Running in debug.")
+    #if DEBUG
+    logger.debug("Running in debug.")
     #endif
     
     var tls = TLSConfiguration.makeClientConfiguration()
@@ -37,6 +37,11 @@ public func configure(_ app: Application) throws {
     
     // register routes
 
-    try routes(app, passports, settings)
+    try routes(app, passports, settings, logger)
     
+    #if DEBUG
+    let oneEncoded = try BenCrypt.encode("1", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+
+    logger.debug("http://localhost:8080/\(oneEncoded)")
+    #endif
 }
