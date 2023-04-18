@@ -2,6 +2,7 @@
 import Vapor
 import Fluent
 import FluentMySQLDriver
+import Leaf
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -34,7 +35,7 @@ public func configure(_ app: Application) throws {
         tlsConfiguration: tls
     ), as: .mysql)
     
-    
+    app.views.use(.leaf)
     // register routes
 
     try routes(app, passports, settings, logger)

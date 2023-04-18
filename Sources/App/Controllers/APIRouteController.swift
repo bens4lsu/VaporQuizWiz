@@ -1,7 +1,14 @@
-import Vapor
-import Leaf
+//
+//  File.swift
+//  
+//
+//  Created by Ben Schultz on 4/18/23.
+//
 
-struct WebRouteController: RouteCollection {
+import Foundation
+import Vapor
+
+struct APIRouteController: RouteCollection {
     
     let ac: AssessmentController
     let settings: ConfigurationSettings
@@ -14,18 +21,16 @@ struct WebRouteController: RouteCollection {
     }
     
     func boot(routes: RoutesBuilder) throws {
-        routes.get(":aid", use: newInstance)
+        let api = routes.grouped("api")
+        api.get(":aid", use: newInstance)
     }
-
-    private func newInstance(_ req: Request) async throws -> View {
+    
+    private func newInstance(_ req: Request) async throws -> Response {
         guard let aidStr = req.parameters.get("aid"),
               let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys))
         else {
             throw Abort(.badRequest, reason: "Invalid assessment token")
         }
-        let instance = try await ac.new(req, aid: aid)
-        return try await req.view.render("QPage", instance)
+        return try await ac.new(req, aid: aid).encodeResponse(for: req)
     }
-    
-    //private func presentation(_ req: Request, ) async throws
 }
