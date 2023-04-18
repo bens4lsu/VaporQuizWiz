@@ -1,0 +1,3 @@
+1.  javascript validate as user goes page to page._bytesNeededToEncodeASN1Length
+2.  server side - handle a good user response if invalid input sent.
+3.  label lists -- need 8 per domain instead of four

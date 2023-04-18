@@ -34,7 +34,11 @@ struct WebRouteController: RouteCollection {
         for (key, value) in variables {
             print("\(key): \(value)")
         }
-        let result = try await ac.processResults(req, variables: variables)
-        return try await result.encodeResponse(for: req)
+        let result = try await ac.processResponse(req, variables: variables)
+        if result {
+            return try await "save succesful.  now present results page".encodeResponse(for: req)
+        }
+        return try await "try again action".encodeResponse(for: req)
+        
     }
 }

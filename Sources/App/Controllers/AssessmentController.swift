@@ -22,7 +22,7 @@ class AssessmentController {
         try await AssessmentInstanceContext(req, forAssessmentId: aid, passports: passports)
     }
     
-    func processResults(_ req: Request, variables: [String: String]) async throws -> Bool {
+    func processResponse(_ req: Request, variables: [String: String]) async throws -> Bool {
         guard let aid = Int(variables["aid"] ?? ""),
               let instance = Int(variables["instance"] ?? ""),
               let passportTypeString = variables["passportType"],
