@@ -36,6 +36,17 @@ public func configure(_ app: Application) throws {
     ), as: .mysql)
     
     app.views.use(.leaf)
+    app.leaf.tags["indexedValue"] = IndexedValue()
+    
+    
+    // Serves files from `Public/` directory
+    let fileMiddleware = FileMiddleware(
+        publicDirectory: app.directory.publicDirectory
+    )
+    app.middleware.use(fileMiddleware)
+    
+    
+    
     // register routes
 
     try routes(app, passports, settings, logger)

@@ -20,12 +20,12 @@ enum PassportType: String, Codable {
     case walkaway
     case expansion
     
-    var domainList: [PassportDomainType] {
+    var domainList: [Int: PassportDomainType] {
         switch self {
         case .walkaway:
-            return [.readiness, .foundation, .resource, .wellness]
+            return [1: .readiness, 2: .foundation, 3: .resource, 4: .wellness]
         case .expansion:
-            return [.readiness]
+            return [1: .readiness]
         }
     }
 }
@@ -38,13 +38,15 @@ enum PassportDomainType: String, Codable {
 }
 
 
-final class PassportDomain: Content, Codable {
+final class PassportDomain: Content, Codable, Comparable {
+    var index: Int
     var domainType: PassportDomainType
     var labels: [String]
     var resultParagraphs: [PassportDomainResult: String]
     
-    init (_ app: Application, for domainType: PassportDomainType) throws {
+    init (_ app: Application, for domainType: PassportDomainType, atIndex index: Int) throws {
         self.domainType = domainType
+        self.index = index
         self.resultParagraphs = [.red: "", .yellow: "", .green: ""]
         
         let filename = domainType.rawValue + ".txt"
@@ -58,7 +60,16 @@ final class PassportDomain: Content, Codable {
         }
         self.resultParagraphs = resultParagraphs
     }
+    
+    static func < (lhs: PassportDomain, rhs: PassportDomain) -> Bool {
+        lhs.index < rhs.index
+    }
+    
+    static func == (lhs: PassportDomain, rhs: PassportDomain) -> Bool {
+        lhs.index == rhs.index
+    }
 }
+
 
 final class PassportModel: Content, Codable {
     let passportType: PassportType
@@ -67,7 +78,8 @@ final class PassportModel: Content, Codable {
     
     init (_ app: Application, forPassportType passportType: PassportType) throws {
         self.passportType = passportType
-        self.domains = try self.passportType.domainList.map { try PassportDomain(app, for: $0) }
+        self.domains = try self.passportType.domainList.map { try PassportDomain(app, for: $0.value, atIndex: $0.key) }
+            .sorted()
         
         let filename = "intro-\(passportType.rawValue).htm"
         self.intro = try ResourceFileManager.readFile(filename, inPath: "", app: app)

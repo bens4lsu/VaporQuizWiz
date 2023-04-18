@@ -18,6 +18,9 @@ struct WebRouteController: RouteCollection {
     }
 
     private func newInstance(_ req: Request) async throws -> View {
+        
+    
+
         guard let aidStr = req.parameters.get("aid"),
               let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys))
         else {
