@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="language" content="en">
+  <title>Assessment & Quiz Test System | Concord Business Services, LLC</title><!-- link rel="stylesheet" href="styles/jquery-ui.min.css" / -->
+  <link rel="stylesheet" href="styles/jquery-ui.structure.min.css"><!-- link rel="stylesheet" href="styles/jquery-ui.theme.min.css" / -->
+  <link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="styles/scorecard-3461AB.css" type="text/css">
+  <link rel="stylesheet" href="styles/jquery-ui.min.css" type="text/css">
+  <meta name='robots' content='index,follow'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!--<script language="javascript" type="text/javascript" src="./scripts/jquery.stickytableheaders.js"></script>-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
+  <meta name="viewport" content="initial-scale=1.0">
+  <script type="text/javascript">
+        
+        function getFrameHeight() 
+        {
+            var height;
+
+            if (document.body.offsetHeight){ //ns6 syntax
+                height = document.body.offsetHeight+30;
+            }
+            else if (document.body.scrollHeight){ //ie5+ syntax
+                height = document.body.scrollHeight+20;
+            }
+            return height;
+        }
+                
+                
+        function sendFrameResizeRequest()
+        {
+            var height;
+            height = getFrameHeight();
+            parent.postMessage (height, "*");
+        }
+                        
+        function submitForm() {
+            $('.qb_submit #button').prop('disabled',true); 
+            $('.qb_submit #button').val('');
+            $('.qb_submit #button').html('<img src="https://myquizwiz.com/quizengine2/img/progress.gif">');
+            document.forms["quizform"].submit();
+        }
+        
+        function display() {
+            if (pageComplete > 0) {
+                $('.banded-question-intro').css('display', 'none');
+            }
+            $('.question-main-block').css('display', 'none');
+            var num1 = pageComplete * 2 + 1;
+            var num2 = pageComplete *2 + 2;
+            $('.question-main-block-' + num1).css('display', 'block');
+            $('.question-main-block-' + num2).css('display', 'block');
+            $('.demographic-question').css('display', 'none');
+            
+            $("#progressbar").progressbar("value",22 * (pageComplete + 1));
+            window.scrollTo({top: 0, behavior: 'smooth'});
+                   
+        }
+        
+        function validateInput() {
+            return true;
+        }
+        
+        function showNameAndEmail() {
+            $('.question-main-block').css('display', 'none');
+            $('.demographic-question').css('display', 'block');
+        }
+        
+        function submitForResults() {
+            $('#quizform').submit();
+        }
+                        
+        
+        var pageComplete = #(pageComplete)
+        
+        $(document).ready(function() {
+            
+            $('.ans-box').click(function(){                                 
+                $(this).closest('.question-main-block').find('.ans-box').removeClass('active');                                     
+                $(this).addClass('active');
+                $(this).find('input:radio').prop("checked", true);
+            });
+            
+            $("#progressbar").progressbar();
+            
+            $('#button').click(function () {
+                if (validateInput()) {
+                    pageComplete += 1;
+                    if (pageComplete == 4) {
+                        showNameAndEmail()
+                    }
+                    else if (pageComplete == 5) {
+                        submitForResults()
+                    }
+                    else {
+                        display();
+                    }
+                }
+            });
+            
+            display();
+            
+            
+        });
+                                        
+                
+    </script>
+</head>
+<body style="width:1px; min-width:100%" class="evolution-assessment-body">
+  <div id="topOfFrame">
+    &nbsp;
+  </div><!-- Page content below this point ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  
+  <div class="banded-survey-header" style="padding-top:70px;">
+    <span>Your #capitalized(assessment.passportModel.passportType) Passport®</span>
+  </div>
+  
+  <div class="wrapperbody clearfix container evolution-assessment-block">
+    <div class="row">
+      <form method="post" action="process_assessment" name="quizform" id="quizform">
+        
+        #if(pageComplete == 0): #unsafeHTML(assessment.passportModel.intro) #endif
+
+        #for(domain in assessment.passportModel.domains):
+        
+            <div class="question-main-block question-main-block-#(domain.index)">
+              <div class="question-block">
+                <div class="question-number">
+                  #(domain.index)a
+                </div>Your #capitalized(domain.domainType) Mindset &mdash; Where are You NOW?
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 0)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>1<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_1" value="1"></label>
+                    </div>
+                  </div> 
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>2<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_2" value="2"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>3<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_3" value="3"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 1)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>4<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_4" value="4"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>5<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_5" value="5"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>6<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_6" value="6"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 2)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>7<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_7" value="7"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>8<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_8" value="8"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>9<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_9" value="9"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 3)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>10<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_10" value="10"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>11<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_11" value="11"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>12<input type="radio" name="single_#(domain.index)a" id="single_#(domain.index)a_12" value="12"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="question-main-block question-main-block-#(domain.index)">
+              <div class="question-block">
+                <div class="question-number">
+                  #(domain.index)b
+                </div>Your #capitalized(domain.domainType) Mindset &mdash; Where do You Want to Be — GOAL?
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 0)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>1<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_1" value="1"></label>
+                    </div>
+                  </div> 
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>2<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_2" value="2"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>3<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_3" value="3"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 1)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>4<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_4" value="4"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>5<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_5" value="5"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>6<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_6" value="6"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 2)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>7<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_7" value="7"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>8<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_8" value="8"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>9<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_9" value="9"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ans-block ans-row-block">
+                #indexedValue(domain.labels, 3)
+                <div class="ans-col-block">
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>10<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_10" value="10"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>11<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_11" value="11"></label>
+                    </div>
+                  </div>
+                  <div class="ans-box">
+                    <div class="ans-number">
+                      <label>12<input type="radio" name="single_#(domain.index)b" id="single_#(domain.index)b_12" value="12"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        #endfor
+        
+        
+        
+        <div class="col-md form_element qb_question demographic-question" id="qb_question_9">
+          <div class="element_header ui-widget-header">
+            <div class="question_number">
+              9.
+            </div>
+            <div class="question_text">
+              Name
+            </div>
+          </div>
+          <div class="form-group qb_answer ui-widget">
+            <input type="text" name="name" id="9" class="qb_textinput form_control" value="" placeholder="">
+          </div><!-- ends div class="form-group qb_answer" -->
+        </div><!-- ends <div class="col-md form_element qb_question"> -->
+        <div class="col-md form_element qb_question demographic-question" id="qb_question_10">
+          <div class="element_header ui-widget-header">
+            <div class="question_number">
+              10.
+            </div>
+            <div class="question_text">
+              Email Address
+            </div>
+          </div>
+          <div class="form-group qb_answer ui-widget">
+            <input type="text" name="email" id="10" class="qb_textinput form_control" value="" placeholder="">
+          </div><!-- ends div class="form-group qb_answer" -->
+        </div><!-- ends <div class="col-md form_element qb_question"> -->
+        
+        <div style="display:none"><input type="text" name="aid" id="aid" value="#(assessment.id)"><input type="text" name="instance" id="instance" value="#(id)"><input type="text" name="passportType" value="#(assessment.passportModel.passportType)"></div>
+        
+        <div id="progressbox">
+          Progress:
+          <div id="progressbar"></div>
+        </div>
+        <div class="qb_submit">
+          <button type="button" name="button" id="button" class="btn btn-default submit_button">Continue This Assessment</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="banded-survey-footer row">
+    #(disclosureText)
+  </div>
+  <script>
+     /*
+     $("div.question-block:contains('1a')").append("<div class="question-block-clarifying">The foundation that gives you confidence to make sound financial decisions.</div>"); 
+     $("div.question-block:contains('1b')").append("<div class="question-block-clarifying">The foundation that gives you confidence to make sound financial decisions.</div>"); 
+     $("div.question-block:contains('2a')").append("<div class="question-block-clarifying">Protecting yourself and those who are important to you.</div>"); 
+     $("div.question-block:contains('2b')").append("<div class="question-block-clarifying">Protecting yourself and those who are important to you.</div>"); 
+     $("div.question-block:contains('3a')").append("<div class="question-block-clarifying">Gain the insight to know not just how much you <em>make</em> but also how much you <em>keep</em>.</div>"); $("div.question-block:contains('3b')").append("<div class="question-block-clarifying">Gain the insight to know not just how much you <em>make</em> but also how much you <em>keep</em>.</div>"); $("div.question-block:contains('4a')").append("<div class="question-block-clarifying">Enhancing your health and wellness so you can enjoy your life and live it fully.</div>"); 
+     $("div.question-block:contains('4b')").append("<div class="question-block-clarifying">Enhancing your health and wellness so you can enjoy your life and live it fully.</div>"); 
+     $("div.question-block:contains('5a')").append("<div class="question-block-clarifying">Sharing key information with your loved ones.</div>"); 
+     $("div.question-block:contains('5b')").append("<div class="question-block-clarifying">Sharing key information with your loved ones.</div>"); 
+     $("div.question-block:contains('6a')").append("<div class="question-block-clarifying">Executing your plan to achieve your goals.</div>"); 
+     $("div.question-block:contains('6b')").append("<div class="question-block-clarifying">Executing your plan to achieve your goals.</div>"); 
+     $("div.question-block:contains('7a')").append("<div class="question-block-clarifying">Acting now to fund your future “walkaway.”</div>"); 
+     $("div.question-block:contains('7b')").append("<div class="question-block-clarifying">Acting now to fund your future “walkaway.”</div>"); 
+     $("div.question-block:contains('8a')").append("<div class="question-block-clarifying">Ensuring you collaborate with an advisor who supports you in achieving what you want.</div>"); 
+     $("div.question-block:contains('8b')").append("<div class="question-block-clarifying">Ensuring you collaborate with an advisor who supports you in achieving what you want.</div>"); 
+
+     $(".ans-row-block").contents().filter(function(){ 
+       return this.nodeType == 3;  // finds the text that isn't in a child element
+     }).wrap('<span style="width: 100%;"></span>').end();
+    
+    */
+  </script> <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Page content ends after this point -->
+  <div class="clear"></div>
+  <div class="main-footer-block">
+    <div class="container"></div>
+  </div>
+</body>
+</html>
