@@ -19,11 +19,19 @@ final class AssessmentInstanceResult: Model, Content {
     var passportDomainType: PassportDomainType
     
     @Field(key: "Now")
-    var now: Int8
+    var now: Int
     
     @Field(key: "Goal")
-    var goal: Int8
+    var goal: Int
 
     init() { }
+    
+    init(assessmentId: Int, assessmentInstanceId: Int, passportDomainType: PassportDomainType, now: Int, goal: Int) {
+        self.assessmentId = assessmentId
+        self.assessmentInstanceId = assessmentInstanceId
+        self.passportDomainType = passportDomainType
+        self.now = now
+        self.goal = goal
+    }
 
 }

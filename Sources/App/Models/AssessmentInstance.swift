@@ -23,7 +23,13 @@ final class AssessmentInstance: Model, Content {
     var dateStart: Date
     
     @Field(key: "DateComplete")
-    var dateComplte: Date?
+    var dateComplete: Date?
+    
+    @Field(key: "UserName")
+    var name: String?
+    
+    @Field(key: "Email")
+    var email: String?
 
     init() { }
     

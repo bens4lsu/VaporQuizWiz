@@ -22,10 +22,10 @@ enum PassportType: String, Codable {
     
     var domainList: [Int: PassportDomainType] {
         switch self {
-        case .walkaway:
-            return [1: .readiness, 2: .foundation, 3: .resource, 4: .wellness]
         case .expansion:
-            return [1: .readiness]
+            return [1: .readiness, 2: .foundation, 3: .resource, 4: .wellness, 5: .caring, 6: .accumulation, 7: .walkaway, 8: .partnership]
+        case .walkaway:
+            return [1: .readiness, 2: .wellness, 3: .foundation, 4: .longevity, 5: .caring, 6: .income, 7: .purpose, 8: .partnership]
         }
     }
 }
@@ -35,6 +35,13 @@ enum PassportDomainType: String, Codable {
     case foundation
     case resource
     case wellness
+    case longevity
+    case caring
+    case income
+    case purpose
+    case partnership
+    case accumulation
+    case walkaway
 }
 
 

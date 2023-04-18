@@ -8,19 +8,18 @@ struct WebRouteController: RouteCollection {
     let logger: Logger
     
     init(passports: Passports, settings: ConfigurationSettings, logger: Logger) {
-        self.ac = AssessmentController(passports: passports)
+        self.ac = AssessmentController(passports: passports, logger: logger)
         self.settings = settings
         self.logger = logger
     }
     
     func boot(routes: RoutesBuilder) throws {
         routes.get(":aid", use: newInstance)
+        routes.post("process_assessment", use: processAssessment)
     }
-
-    private func newInstance(_ req: Request) async throws -> View {
-        
     
 
+    private func newInstance(_ req: Request) async throws -> View {
         guard let aidStr = req.parameters.get("aid"),
               let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys))
         else {
@@ -30,5 +29,12 @@ struct WebRouteController: RouteCollection {
         return try await req.view.render("QPage", instance)
     }
     
-    //private func presentation(_ req: Request, ) async throws
+    private func processAssessment(_ req: Request) async throws -> Response {
+        let variables = try req.content.decode([String: String].self)
+        for (key, value) in variables {
+            print("\(key): \(value)")
+        }
+        let result = try await ac.processResults(req, variables: variables)
+        return try await result.encodeResponse(for: req)
+    }
 }
