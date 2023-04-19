@@ -3,7 +3,7 @@ import Vapor
 import Fluent
 
 
-final class AssessmentInstanceResult: Model, Content {
+final class AssessmentInstanceDetail: Model, Content {
     static let schema = "AssessmentInstanceResults"
     
     @ID(custom: "AssessmentInstanceResultID")
@@ -33,5 +33,4 @@ final class AssessmentInstanceResult: Model, Content {
         self.now = now
         self.goal = goal
     }
-
 }
