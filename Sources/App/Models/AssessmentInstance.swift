@@ -92,10 +92,6 @@ final class AssessmentInstanceContext: Content, Error {
         
         return AssessmentInstanceReportContext(id: self.id, assessment: self.assessment, details: details, takerName: name)
     }
-    
-    func dbModel() -> AssessmentInstance {
-        AssessmentInstance(id: self.id, assessmentId: self.assessment.id, dateStart: self.dateStart, dateComplete: self.dateComplete, name: self.name, email: self.email)
-    }
 }
 
 final class AssessmentInstanceReportContext: Content, Codable {

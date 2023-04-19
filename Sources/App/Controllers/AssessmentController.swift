@@ -72,11 +72,13 @@ class AssessmentController {
         
         // save answers to database
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-            try await updateInstance(req, instance: assessmentInstanceContext.dbModel(), name: name, email: email)
+            
             for i in 0..<resultRowsToUpdate.count {
                 let row = resultRowsToUpdate[i]
-                async let _ = row.save(on: req.db)
+                async let _ = try updateResponseRow(req, row: row)
             }
+            let tmpInstance = try await existingInstance(req, aic: assessmentInstanceContext)
+            async let _ = updateInstance(req, instance: tmpInstance, name: name, email: email)
         }
         let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext)
         return .success(resultContext)
@@ -95,10 +97,32 @@ class AssessmentController {
     }
     
     private func updateInstance(_ req: Request, instance: AssessmentInstance, name: String, email: String) async throws {
-//        instance.name = name
-//        instance.email = email
-//        instance.dateComplete = Date()
-//        try await instance.save(on: req.db)
+        instance.name = name
+        instance.email = email
+        instance.dateComplete = Date()
+        try await instance.update(on: req.db)
     }
     
+    private func existingInstance(_ req: Request, aic: AssessmentInstanceContext) async throws -> AssessmentInstance {
+        let instance = aic.id
+        guard let assessmentInstance = try await AssessmentInstance.find(instance, on: req.db) else {
+            throw Abort(.internalServerError, reason: "Assessment instance not found for id \(aic.id)")
+        }
+        return assessmentInstance
+    }
+    
+    private func updateResponseRow(_ req: Request, row: AssessmentInstanceDetail) async throws {
+        if let aidRow = try await AssessmentInstanceDetail.query(on: req.db)
+            .filter(\.$assessmentInstanceId == row.assessmentInstanceId)
+            .filter(\.$passportDomainType == row.passportDomainType)
+            .first()
+        {
+            try await aidRow.update(on: req.db)
+        }
+        else {
+            let aidRow = AssessmentInstanceDetail(assessmentId: row.assessmentId, assessmentInstanceId: row.assessmentInstanceId, passportDomainType: row.passportDomainType, now: row.now, goal: row.goal)
+            try await aidRow.save(on: req.db)
+        }
+                                    
+    }
 }
