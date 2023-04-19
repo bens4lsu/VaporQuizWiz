@@ -110,6 +110,8 @@ final class AssessmentInstanceReportContext: Content, Codable {
     let passportType: PassportType
     var overallResult: PassportDomainResult?
     var overallParagraph: String?
+    let logoFileName: String
+    let disclosureText: String
     
     
     init(id: Int, assessment: AssessmentContext, takerName: String) {
@@ -120,6 +122,8 @@ final class AssessmentInstanceReportContext: Content, Codable {
         self.assessmentId = assessment.id
         self.takerName = takerName
         self.passportType = assessment.passportModel.passportType
+        self.logoFileName = assessment.logoFileName
+        self.disclosureText = assessment.disclosureText
     }
     
     convenience init(id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String) {
