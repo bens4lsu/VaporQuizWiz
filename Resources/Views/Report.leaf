@@ -134,7 +134,7 @@
       </div>
       <div class="congratulations-block" style="padding:50px 0;">
         <div class="container">
-          <h3>Congratulations on completing Your Expansion Passport®!</h3>
+          <h3>Congratulations on completing Your #capitalized(passportType) Passport®!</h3>
           <h3>You’ve taken an important step toward securing your future and living the life that you really want.</h3>
           <p class="qb_res">In the sections below, you’ll find customized feedback on each of the 8 mindsets. Based upon the answers you’ve provided;&nbsp;we offer suggestions on how you can make even more progress in each area.</p>
           <p class="qb_res">Then, at the end, we pull it all together to offer you overall recommendations and the opportunity for us to review your results and recommendations together.</p>

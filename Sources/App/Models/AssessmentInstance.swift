@@ -56,6 +56,9 @@ final class AssessmentInstanceContext: Content, Error {
     var pageComplete: Int
     var name: String?
     var email: String?
+    var reqFieldErrorName: Bool = false
+    var reqFieldErrorEmail: Bool = false
+    var showBossErrorMessage: Bool = false
     
     init(_ req: Request, forAssessmentId aid: Int, passports: Passports) async throws {
         let ai = AssessmentInstance(forAID: aid)
@@ -108,7 +111,6 @@ final class AssessmentInstanceReportContext: Content, Codable {
     var overallParagraph: String?
     let logoFileName: String
     let disclosureText: String
-    
     
     init(id: Int, assessment: AssessmentContext, takerName: String) {
         self.id = id

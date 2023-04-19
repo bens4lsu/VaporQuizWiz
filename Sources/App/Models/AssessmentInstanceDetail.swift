@@ -44,6 +44,8 @@ class AssessmentInstanceDetailContext: Codable {
     let now: Int
     let goal: Int
     let blurb: String
+    var reqFieldErrorNow: Bool = false
+    var reqFieldErrorGoal: Bool = false
     
 //    init(order: Int, domain: PassportDomain, result: PassportDomainResult) {
 //        self.order = order
