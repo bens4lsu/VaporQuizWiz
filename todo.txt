@@ -1,2 +1,7 @@
 1.  javascript validate as user goes page to page._bytesNeededToEncodeASN1Length
 2.  server side - handle a good user response if invalid input sent.
+3.  disclosure text on Q
+4.  logo on report
+5.  domain blurb on report
+6.  overall paragraph
+7.  now and goal numbers for summary page

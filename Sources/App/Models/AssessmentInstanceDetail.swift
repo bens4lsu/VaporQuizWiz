@@ -34,3 +34,47 @@ final class AssessmentInstanceDetail: Model, Content {
         self.goal = goal
     }
 }
+
+class AssessmentInstanceDetailContext: Codable {
+    let order: Int
+    //let domain: PassportDomain
+    let score: Int
+    let result:  PassportDomainResult
+    let domainType: PassportDomainType
+    let resultParagraph: String
+    
+//    init(order: Int, domain: PassportDomain, result: PassportDomainResult) {
+//        self.order = order
+//        self.score = score
+//        self.result = result
+//        self.domainType = domain.domainType
+//        self.resultParagraph = domain.resultParagraphs[result]!
+//    }
+    
+    
+    init(order: Int, domain: PassportDomain, now: Int, goal: Int) {
+        self.order = order
+        self.domainType = domain.domainType
+        self.score = Self.score(now: now, goal: goal)
+        self.result = Self.result(now: now)
+        self.resultParagraph = domain.resultParagraphs[result]!
+    }
+    
+    static func score(now: Int, goal: Int) -> Int {
+        if goal > now {
+            return goal - now
+        }
+        return 0
+    }
+    
+    static func result(now: Int) -> PassportDomainResult {
+        if now <= 6 {
+            return .red
+        }
+        else if now <= 9 {
+            return .yellow
+        }
+        return .green
+    }
+    
+}

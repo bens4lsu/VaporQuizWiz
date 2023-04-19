@@ -21,8 +21,8 @@ class ResourceFileManager {
     static func parseLabels(_ fileContents: String, filename: String) throws -> [String] {
         let lines = fileContents.components(separatedBy: .newlines)
             .filter { !$0.isEmpty }
-        guard lines.count == 4 else {
-            throw Abort(.internalServerError, reason: "file at \(filename) improperly configured.  Should contain four lines of text.")
+        guard lines.count == 8 else {
+            throw Abort(.internalServerError, reason: "file at \(filename) improperly configured.  Should contain eight lines of text.")
         }
         return lines
     }

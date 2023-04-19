@@ -125,7 +125,7 @@
   
   <div class="wrapperbody clearfix container evolution-assessment-block">
     <div class="row">
-      <form method="post" action="process_assessment" name="quizform" id="quizform">
+      <form method="post" action="evaluate" name="quizform" id="quizform">
         
         #if(pageComplete == 0): #unsafeHTML(assessment.passportModel.intro) #endif
 

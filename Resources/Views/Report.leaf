@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Results - Report from the MyQuizWiz Test System</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+  @page {margin:0px}
+  </style>
+  <style type="text/css" scoped="">
+       
+        #tblCJPassportSummary { 
+            text-align: center;
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin-left:auto;
+            margin-right:auto;
+            position: relative;
+            top: -40px;
+            background-color: #fff;
+        }
+        
+        #tblCJPassportSummary th, #tblCJPassportSummary td {
+            padding: 18px;
+            border-bottom: 1px solid black;
+        }
+        
+        #tblCJPassportSummary td:first-child, #tblCJPassportSummary th:first-child {
+            border-right: 1px solid black;
+        }
+        
+        #tblCJPassportSummary td:nth-child(3) {
+            width: 70px;
+            background-image: url("../CandJCommon/img/right_arrow.png");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        #tblCJPassportSummary td.arrow-green {
+            background-image: url("../CandJCommon/img/green_arrow.png");
+        }
+        
+        #tblCJPassportSummary td.arrow-yellow {
+            background-image: url("../CandJCommon/img/yellow_arrow.png");
+        }
+        
+        #tblCJPassportSummary td.arrow-red {
+            background-image: url("../CandJCommon/img/red_arrow.png");
+        }
+        
+        #divSummaryHeading {
+            height: 230px;
+            background-color: #79A2DF;
+            width: 90%;
+            margin-left:auto;
+            margin-right:auto;
+            font-size: 24pt;
+            text-align:center;
+            color:#fff;
+            padding-top: 85px;
+            max-width: 1100px;
+            border-radius: 10px;
+            line-height: 30pt;;
+        }
+        
+        #divname {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom:80px;
+        }
+        
+  </style>
+</head>
+<body>
+  <script type="text/javascript">
+        
+        function getFrameHeight() {
+           var height;
+
+            if (document.body.offsetHeight){ //ns6 syntax
+                    height = document.body.offsetHeight+30;
+            }
+            else if (document.body.scrollHeight){ //ie5+ syntax
+                    height = document.body.scrollHeight+20;
+            }
+            return height;
+        }
+                   
+            function sendFrameResizeRequest() {
+            var height;
+            height = getFrameHeight();
+            console.log(height);
+            parent.postMessage (height, "*");
+        }
+                        
+                $(window).on('load', function ()  {
+                    // window.load fires after document.ready.  document.ready is after full DOM is loaded
+                    // but window.loat waits until any graphics and frames are drawn as well.
+                        
+            $(window).resize(function(){
+                sendFrameResizeRequest();
+            });
+            
+            sendFrameResizeRequest();
+            // send the resize request again 2.5 seconds later.  Had test cases where the request
+            // was sent before styles applied somehow, and the frame wasn't big enough.
+            setTimeout(() => {  sendFrameResizeRequest(); }, 2500);
+            $(window).scrollTop(0);
+        });
+
+    
+  </script>
+  <div class="main">
+    <div class="content" style="margin-left:0;">
+      <!-- Assessment-level custom code -->
+
+       <!-- Report Introduction  -->
+      <div class="header-block">
+        <div class="container">
+          <div class="logo">
+            <a href="#"><img alt="Logo" src="images/logo.png"></a>
+          </div>
+          <div class="header-caption">
+            <div class="header-caption-box">
+              <h1>YOUR #capitalized(passportType) PASSPORT®</h1>
+              <h2>Secure Your Future to Live the Life You Really Want.</h2>
+              <h2>#(takerName)</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="congratulations-block" style="padding:50px 0;">
+        <div class="container">
+          <h3>Congratulations on completing Your Expansion Passport®!</h3>
+          <h3>You’ve taken an important step toward securing your future and living the life that you really want.</h3>
+          <p class="qb_res">In the sections below, you’ll find customized feedback on each of the 8 mindsets. Based upon the answers you’ve provided;&nbsp;we offer suggestions on how you can make even more progress in each area.</p>
+          <p class="qb_res">Then, at the end, we pull it all together to offer you overall recommendations and the opportunity for us to review your results and recommendations together.</p>
+        </div>
+      </div>
+      
+      #for (dd in domainDetails):
+          <div class="report_paragraph condition99" style="display:block;">
+            <div class="container">
+              <div class="quiz-report-block #domain(result)">
+                <div class="quiz-report-block-img"><img src="img/readiness.png"></div>
+                <h1>#capitalized(dd.domainType) Mindset</h1>
+                <h2>#(dd.domainBlurb)</h2>
+                <h2>Your Distance From Your Goal: #(dd.score)</h2>
+                #(dd.resultParagraph)
+              </div>
+            </div>
+          </div>
+      #endfor
+      
+      <div class="report_paragraph condition99" style="display:block;">
+        <div class="overall-block">
+          <div class="container">
+            <div class="quiz-report-block green">
+              <h1>Overall Recommendations</h1>
+              #(ovarallParagraph)
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="divSummary">
+        <div id="divSummaryHeading" style="page-break-before: always;">
+          THANK YOU FOR COMPLETING YOUR #uppercased(passportType) PASSPORT®
+        </div>
+        <table id="tblCJPassportSummary">
+          <thead>
+            <tr>
+              <th>MINDSET</th>
+              <th>NOW</th>
+              <th>&nbsp;</th>
+              <th>GOAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            #for (dd in domainDetails):
+            <tr>
+              <td>#uppercased(dd.domainType)</td>
+              <td>#(dd.score)</td>
+              <td class="arrow-#(dd.result)"></td>
+              <td>#(dd.score)</td>
+            </tr>
+            #endfor
+            
+          </tbody>
+        </table>
+        <div id="divname">
+          Name: #(takerName)
+        </div>
+      </div>
+      <div class="container">
+        <div class="footer-block">
+          Advisor firm information here - address, email, website, phone, compliance information, etc.&nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
