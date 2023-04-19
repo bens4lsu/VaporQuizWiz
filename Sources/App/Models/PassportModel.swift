@@ -50,6 +50,7 @@ final class PassportDomain: Content, Codable, Comparable {
     var domainType: PassportDomainType
     var labels: [String]
     var resultParagraphs: [PassportDomainResult: String]
+    var blurb: String
     
     init (_ app: Application, for domainType: PassportDomainType, atIndex index: Int) throws {
         self.domainType = domainType
@@ -66,6 +67,9 @@ final class PassportDomain: Content, Codable, Comparable {
             resultParagraphs[resultType] = contents
         }
         self.resultParagraphs = resultParagraphs
+        
+        let filename2 = domainType.rawValue + "-blurb.txt"
+        self.blurb = try ResourceFileManager.readFile(filename2, inPath: "OutputParagraphs", app: app)
     }
     
     static func < (lhs: PassportDomain, rhs: PassportDomain) -> Bool {

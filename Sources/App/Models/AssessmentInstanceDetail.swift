@@ -43,6 +43,7 @@ class AssessmentInstanceDetailContext: Codable {
     let resultParagraph: String
     let now: Int
     let goal: Int
+    let blurb: String
     
 //    init(order: Int, domain: PassportDomain, result: PassportDomainResult) {
 //        self.order = order
@@ -61,6 +62,7 @@ class AssessmentInstanceDetailContext: Codable {
         self.resultParagraph = domain.resultParagraphs[result]!
         self.now = now
         self.goal = goal
+        self.blurb = domain.blurb
     }
     
     static func score(now: Int, goal: Int) -> Int {
