@@ -36,7 +36,6 @@ struct WebRouteController: RouteCollection {
 //        }
         let result = try await ac.processResponse(req, variables: variables)
         if case .success(let resultContext) = result {
-            print (resultContext)
             return try await req.view.render("Report", resultContext)
         }
         return try await newInstance(req)

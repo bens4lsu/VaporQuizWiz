@@ -350,7 +350,7 @@
   </div>
 
   <div class="banded-survey-footer row">
-    #(disclosureText)
+    #(assessment.disclosureText)
   </div>
   <script>
      /*
