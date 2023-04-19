@@ -2,3 +2,7 @@ You don't use a cash flow tracker at all to see where your money goes.
 You occasionally use a cash flow tracker to see where your money goes.
 You frequently use a cash flow tracker to see where your money goes.
 You use a cash flow tracker at least once a month to see where your money goes, as part of your overall plan.
+You haven't really thought about or planned to use a cash flow tracker.
+You'd like to be using a cash flow tracker occasionally to see where your money goes.
+You'd like to be using a cash flow tracker frequently to see where your money goes.
+You'd like to use a cash flow tracker at least once a month to see where your money goes, as part of your overall plan.
