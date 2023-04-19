@@ -3,5 +3,3 @@
 3.  disclosure text on Q
 4.  logo on report
 5.  domain blurb on report
-6.  overall paragraph
-7.  now and goal numbers for summary page

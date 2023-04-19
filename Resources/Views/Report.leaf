@@ -145,7 +145,7 @@
           <div class="report_paragraph condition99" style="display:block;">
             <div class="container">
               <div class="quiz-report-block #domain(result)">
-                <div class="quiz-report-block-img"><img src="img/readiness.png"></div>
+                <div class="quiz-report-block-img"><img src="img/#(dd.domainType).png"></div>
                 <h1>#capitalized(dd.domainType) Mindset</h1>
                 <h2>#(dd.domainBlurb)</h2>
                 <h2>Your Distance From Your Goal: #(dd.score)</h2>
@@ -184,9 +184,9 @@
             #for (dd in domainDetails):
             <tr>
               <td>#uppercased(dd.domainType)</td>
-              <td>#(dd.score)</td>
+              <td>#(dd.now)</td>
               <td class="arrow-#(dd.result)"></td>
-              <td>#(dd.score)</td>
+              <td>#(dd.goal)</td>
             </tr>
             #endfor
             

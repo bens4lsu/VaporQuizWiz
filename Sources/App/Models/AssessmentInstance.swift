@@ -109,6 +109,7 @@ final class AssessmentInstanceReportContext: Content, Codable {
     let takerName: String
     let passportType: PassportType
     var overallResult: PassportDomainResult?
+    var overallParagraph: String?
     
     
     init(id: Int, assessment: AssessmentContext, takerName: String) {
@@ -126,6 +127,8 @@ final class AssessmentInstanceReportContext: Content, Codable {
         self.domainDetails = details
         self.overallDistance = Self.overallDistance(basedOn: details)
         self.overallResult = Self.overallResult(basedOn: details)
+        self.overallParagraph = assessment.passportModel.overallParagraphs[self.overallResult!]!
+        
     }
     
     func updateDetails(details: [AssessmentInstanceDetailContext]) {

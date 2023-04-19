@@ -82,6 +82,7 @@ final class PassportModel: Content, Codable {
     let passportType: PassportType
     let domains: [PassportDomain]
     let intro: String
+    let overallParagraphs: [PassportDomainResult : String]
     
     init (_ app: Application, forPassportType passportType: PassportType) throws {
         self.passportType = passportType
@@ -90,6 +91,14 @@ final class PassportModel: Content, Codable {
         
         let filename = "intro-\(passportType.rawValue).htm"
         self.intro = try ResourceFileManager.readFile(filename, inPath: "", app: app)
+        
+        var resultParagraphs = [PassportDomainResult : String]()
+        for resultType in PassportDomainResult.allCases {
+            let filename2 = "overall-\(resultType.rawValue).htm"
+            let contents = try ResourceFileManager.readFile(filename2, inPath: "OutputParagraphs", app: app)
+            resultParagraphs[resultType] = contents
+        }
+        self.overallParagraphs = resultParagraphs
     }
 }
 
