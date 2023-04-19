@@ -29,7 +29,7 @@ struct WebRouteController: RouteCollection {
         return try await req.view.render("QPage", instance)
     }
     
-    private func processAssessment(_ req: Request) async throws -> Response {
+    private func processAssessment(_ req: Request) async throws -> View {
         let variables = try req.content.decode([String: String].self)
 //        for (key, value) in variables {
 //            print("\(key): \(value)")
@@ -37,9 +37,9 @@ struct WebRouteController: RouteCollection {
         let result = try await ac.processResponse(req, variables: variables)
         if case .success(let resultContext) = result {
             print (resultContext)
-            return try await resultContext.encodeResponse(for: req)
+            return try await req.view.render("Report", resultContext)
         }
-        return try await "try again action".encodeResponse(for: req)
+        return try await newInstance(req)
         
     }
 }
