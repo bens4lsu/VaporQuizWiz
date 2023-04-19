@@ -147,7 +147,7 @@
               <div class="quiz-report-block #domain(result)">
                 <div class="quiz-report-block-img"><img src="img/#(dd.domainType).png"></div>
                 <h1>#capitalized(dd.domainType) Mindset</h1>
-                <h2>#(dd.domainBlurb)</h2>
+                <h2>#(dd.domainBlurb)blurb goes here</h2>
                 <h2>Your Distance From Your Goal: #(dd.score)</h2>
                 #unsafeHTML(dd.resultParagraph)
               </div>
