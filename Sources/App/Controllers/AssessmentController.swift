@@ -35,8 +35,12 @@ class AssessmentController {
     }
     
     func processResponse(_ req: Request, variables: [String: String]) async throws -> ResponseStatus {
-        guard let aid = Int(variables["aid"] ?? ""),
-              let instance = Int(variables["instance"] ?? ""),
+        
+        let decodedAid = (try? BenCrypt.decode(variables["aid"] ?? "", keys: cryptKeys)) ?? ""
+        let decodedInstance = (try? BenCrypt.decode(variables["instance"] ?? "", keys: cryptKeys)) ?? ""
+        
+        guard let aid = Int(decodedAid),
+              let instance = Int(decodedInstance),
               let passportTypeString = variables["passportType"],
               let passportType = PassportType(rawValue: passportTypeString),
               let name = variables["name"],
