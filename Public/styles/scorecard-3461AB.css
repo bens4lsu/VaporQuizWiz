@@ -224,7 +224,11 @@ select{
 	padding-top: 0.5em;
 	padding-bottom:0.5em;
 	position: relative;
-	top: 90px;
+    display: none;
+}
+
+#qb_error_cs{
+    top:90px;
 }
 
 .question_text {

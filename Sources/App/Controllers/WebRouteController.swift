@@ -15,7 +15,6 @@ struct WebRouteController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
         routes.get(":aid", use: newInstance)
-        routes.get(":aid", ":instance", use: reloadInstance)
         routes.post("evaluate", use: processAssessment)
     }
     
@@ -30,17 +29,17 @@ struct WebRouteController: RouteCollection {
         return try await req.view.render("QPage", instance)
     }
     
-    private func reloadInstance(_ req: Request) async throws -> View {
-        guard let aidStr = req.parameters.get("aid"),
-              let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys)),
-              let instanceStr = req.parameters.get("instance"),
-              let instance = try Int(BenCrypt.decode(instanceStr, keys: settings.cryptKeys))
-        else {
-            throw Abort(.badRequest, reason: "Invalid assessment token")
-        }
-        let context = try await ac.existingContext(req, aid: aid, instance: instance)
-        return try await req.view.render("QPage", context)
-    }
+//    private func reloadInstance(_ req: Request) async throws -> View {
+//        guard let aidStr = req.parameters.get("aid"),
+//              let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys)),
+//              let instanceStr = req.parameters.get("instance"),
+//              let instance = try Int(BenCrypt.decode(instanceStr, keys: settings.cryptKeys))
+//        else {
+//            throw Abort(.badRequest, reason: "Invalid assessment token")
+//        }
+//        let context = try await ac.existingContext(req, aid: aid, instance: instance)
+//        return try await req.view.render("QPage", context)
+//    }
     
     private func processAssessment(_ req: Request) async throws -> Response {
         let variables = try req.content.decode([String: String].self)

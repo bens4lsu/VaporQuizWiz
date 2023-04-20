@@ -66,7 +66,43 @@
         }
         
         function validateInput() {
+            let validated = true;
+            if (pageComplete < 4) {
+                for (var i = 1; i <= 2; i++) {
+                    var questionNum = 2 * pageComplete + i;
+                    var questionSelectorA = questionNum + 'a';
+                    var questionSelectorB = questionNum + 'b';
+                    validated = validateRadioInput(questionSelectorA) && validated;
+                    validated = validateRadioInput(questionSelectorB) && validated;
+                }
+            }
+            else if (pageComplete == 4) {
+                if ($('#name').val() == null || $('#name').val() == undefined || $('#name').val() == "") {
+                    validated = false;
+                    $('#err_name').css('display','block');
+                }
+                
+                if (! isEmail($('#email').val())) { 
+                    validated = false;
+                    $('#err_email').css('display', 'block');
+                }
+            }
+            return validated;
+        }
+        
+        function validateRadioInput(num) {
+            let input = $('input[name="single_' + num + '"]:checked');
+            let errorDiv = $('div#error_' + num);
+            if (input.length == 0) {
+                errorDiv.css('display', 'block');
+                return false;        
+            }
             return true;
+        }
+        
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
         }
         
         function showNameAndEmail() {
@@ -79,9 +115,7 @@
         }
                         
         
-        var pageComplete = #(pageComplete);
-        var showSSErrors = #(showBossErrorMessage);
-        var showLocalErrors = false;
+        var pageComplete = 0;
         
         $(document).ready(function() {
             
@@ -95,6 +129,7 @@
             
             $('#button').click(function () {
                 if (validateInput()) {
+                    $('#qb_error_cs').css('display', 'none');
                     pageComplete += 1;
                     if (pageComplete == 4) {
                         showNameAndEmail()
@@ -106,13 +141,13 @@
                         display();
                     }
                 }
+                else {
+                    $('#qb_error_cs').css('display', 'block');
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                }
             });
             
             display();
-            if (showSSErrors) {
-                $('#qb_error_ss').css('display', 'block');
-            }
-            
             
         });
                                         
@@ -130,11 +165,10 @@
   
   <div class="wrapperbody clearfix container evolution-assessment-block">
     <div class="row">
-      <div class="qb_error" id="qb_error_ss" style="display:none;">The assessment could not be evaluated, most likely due to missing answers.  Please check that all questions in the survey have an answer marked.</div>
       <div class="qb_error" id="qb_error_cs" style="display:none;">There were problems with some of the answers that were submitted.  Please correct the problems indicated below and resubmit.</div>
       <form method="post" action="evaluate" name="quizform" id="quizform">
         
-        #if(pageComplete == 0): #unsafeHTML(assessment.passportModel.intro) #endif
+        #unsafeHTML(assessment.passportModel.intro)
 
         #for(domain in assessment.passportModel.domains):
         
@@ -143,6 +177,7 @@
                 <div class="question-number">
                   #(domain.index)a
                 </div>Your #capitalized(domain.domainType) Mindset &mdash; Where are You NOW?
+                <div class="qb_error" id="error_#(domain.index)a">This question requires a response.</div>
               </div>
               <div class="ans-block ans-row-block">
                 #indexedValue(domain.labels, 0)
@@ -231,6 +266,7 @@
                 <div class="question-number">
                   #(domain.index)b
                 </div>Your #capitalized(domain.domainType) Mindset &mdash; Where do You Want to Be — GOAL?
+                <div class="qb_error" id="error_#(domain.index)b">This question requires a response.</div>
               </div>
               <div class="ans-block ans-row-block">
                 #indexedValue(domain.labels, 4)
@@ -324,10 +360,11 @@
             </div>
             <div class="question_text">
               Name
+              <div class="qb_error" id="err_name">Please enter a valid name.</div>
             </div>
           </div>
           <div class="form-group qb_answer ui-widget">
-            <input type="text" name="name" id="9" class="qb_textinput form_control" value="" placeholder="">
+            <input type="text" name="name" id="name" class="qb_textinput form_control" value="" placeholder="">
           </div><!-- ends div class="form-group qb_answer" -->
         </div><!-- ends <div class="col-md form_element qb_question"> -->
         <div class="col-md form_element qb_question demographic-question" id="qb_question_10">
@@ -337,10 +374,11 @@
             </div>
             <div class="question_text">
               Email Address
+              <div class="qb_error" id="err_email">Please enter a valid email address.</div>
             </div>
           </div>
           <div class="form-group qb_answer ui-widget">
-            <input type="text" name="email" id="10" class="qb_textinput form_control" value="" placeholder="">
+            <input type="text" name="email" id="email" class="qb_textinput form_control" value="" placeholder="">
           </div><!-- ends div class="form-group qb_answer" -->
         </div><!-- ends <div class="col-md form_element qb_question"> -->
         

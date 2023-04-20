@@ -30,10 +30,8 @@ class AssessmentController {
         try await AssessmentInstanceContext(req, forAssessmentId: aid, passports: passports)
     }
     
-    func existingContext(_ req: Request, aid: Int, instance: Int, showServerSideError: Bool = false) async throws -> AssessmentInstanceContext {
-        let aic = try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports)
-        aic.showBossErrorMessage = showServerSideError
-        return aic
+    func existingContext(_ req: Request, aid: Int, instance: Int) async throws -> AssessmentInstanceContext {
+        return try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports)
     }
     
     func processResponse(_ req: Request, variables: [String: String]) async throws -> ResponseStatus {
@@ -106,11 +104,6 @@ class AssessmentController {
             throw Abort (.internalServerError, reason: "Form submitted without data to identify the assessment being used.")
         }
         let aidStr = try BenCrypt.encode(String(aid), keys: cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-        let instance = Int(variables["instance"] ?? "")
-        if instance != nil {
-            let instanceStr = try BenCrypt.encode(String(instance!), keys: cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-            return .failure("/\(aidStr)/\(instanceStr)")
-        }
         return .failure("/\(aidStr)")
     }
     

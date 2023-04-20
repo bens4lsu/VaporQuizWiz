@@ -53,7 +53,7 @@ final class AssessmentInstanceContext: Content, Error {
     let assessment: AssessmentContext
     let dateStart: Date
     var dateComplete: Date?
-    var pageComplete: Int
+    //var pageComplete: Int
     var name: String?
     var email: String?
     var showBossErrorMessage: Bool = false
@@ -69,7 +69,7 @@ final class AssessmentInstanceContext: Content, Error {
         self.id = id
         self.dateStart = ai.dateStart
         self.assessment = try await AssessmentContext(req, id: aid, passports: passports)
-        self.pageComplete = 0
+        //self.pageComplete = 0
         self.dateComplete = nil
     }
     
@@ -80,7 +80,7 @@ final class AssessmentInstanceContext: Content, Error {
         self.id = instance
         self.dateStart = ai.dateStart
         self.assessment = try await AssessmentContext(req, id: aid, passports: passports)
-        self.pageComplete = 5
+        //self.pageComplete = 5
         self.dateComplete = ai.dateComplete
         self.name = ai.name
         self.email = ai.email
