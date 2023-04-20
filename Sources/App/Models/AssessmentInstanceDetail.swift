@@ -33,6 +33,14 @@ final class AssessmentInstanceDetail: Model, Content {
         self.now = now
         self.goal = goal
     }
+    
+    func context(passportModel: PassportModel) throws -> AssessmentInstanceDetailContext {
+        guard let passportDomain = passportModel.domains.first (where: { $0.domainType == self.passportDomainType }) else {
+            throw Abort (.internalServerError, reason: "Domain not found in passport model.")
+        }
+        
+        return AssessmentInstanceDetailContext (order: passportDomain.index, domain: passportDomain, now: self.now, goal: self.goal)
+    }
 }
 
 class AssessmentInstanceDetailContext: Codable {
@@ -44,17 +52,7 @@ class AssessmentInstanceDetailContext: Codable {
     let now: Int
     let goal: Int
     let blurb: String
-    var reqFieldErrorNow: Bool = false
-    var reqFieldErrorGoal: Bool = false
-    
-//    init(order: Int, domain: PassportDomain, result: PassportDomainResult) {
-//        self.order = order
-//        self.score = score
-//        self.result = result
-//        self.domainType = domain.domainType
-//        self.resultParagraph = domain.resultParagraphs[result]!
-//    }
-    
+
     
     init(order: Int, domain: PassportDomain, now: Int, goal: Int) {
         self.order = order
@@ -66,6 +64,7 @@ class AssessmentInstanceDetailContext: Codable {
         self.goal = goal
         self.blurb = domain.blurb
     }
+    
     
     static func score(now: Int, goal: Int) -> Int {
         if goal > now {

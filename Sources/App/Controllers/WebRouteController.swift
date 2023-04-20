@@ -8,13 +8,14 @@ struct WebRouteController: RouteCollection {
     let logger: Logger
     
     init(passports: Passports, settings: ConfigurationSettings, logger: Logger) {
-        self.ac = AssessmentController(passports: passports, logger: logger)
+        self.ac = AssessmentController(passports: passports, logger: logger, cryptKeys: settings.cryptKeys)
         self.settings = settings
         self.logger = logger
     }
     
     func boot(routes: RoutesBuilder) throws {
         routes.get(":aid", use: newInstance)
+        routes.get(":aid", ":instance", use: reloadInstance)
         routes.post("evaluate", use: processAssessment)
     }
     
@@ -29,17 +30,29 @@ struct WebRouteController: RouteCollection {
         return try await req.view.render("QPage", instance)
     }
     
-    private func processAssessment(_ req: Request) async throws -> View {
+    private func reloadInstance(_ req: Request) async throws -> View {
+        guard let aidStr = req.parameters.get("aid"),
+              let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys)),
+              let instanceStr = req.parameters.get("instance"),
+              let instance = try Int(BenCrypt.decode(instanceStr, keys: settings.cryptKeys))
+        else {
+            throw Abort(.badRequest, reason: "Invalid assessment token")
+        }
+        let context = try await ac.existingContext(req, aid: aid, instance: instance)
+        return try await req.view.render("QPage", context)
+    }
+    
+    private func processAssessment(_ req: Request) async throws -> Response {
         let variables = try req.content.decode([String: String].self)
 //        for (key, value) in variables {
 //            print("\(key): \(value)")
 //        }
         let result = try await ac.processResponse(req, variables: variables)
-        if case .success(let resultContext) = result {
-            return try await req.view.render("Report", resultContext)
-            //return try await resultContext.encodeResponse(for: req)
+        switch result {
+        case .success(let resultContext):
+            return try await req.view.render("Report", resultContext).encodeResponse(for: req)
+        case .failure(let redirectPath):
+            return req.redirect(to: redirectPath)
         }
-        return try await newInstance(req)
-        
     }
 }

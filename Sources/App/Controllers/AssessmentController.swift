@@ -13,23 +13,27 @@ class AssessmentController {
     
     enum ResponseStatus: Content {
         case success(AssessmentInstanceReportContext)
-        case failure//(AssessmentInstanceContext)
+        case failure(String)  // string is for redirect page
     }
     
     var passports: Passports
     var logger: Logger
+    var cryptKeys: ConfigurationSettings.CryptKeys
     
-    init(passports: Passports, logger: Logger) {
+    init(passports: Passports, logger: Logger, cryptKeys: ConfigurationSettings.CryptKeys) {
         self.passports = passports
         self.logger = logger
+        self.cryptKeys = cryptKeys
     }
     
     func new(_ req: Request, aid: Int) async throws -> AssessmentInstanceContext {
         try await AssessmentInstanceContext(req, forAssessmentId: aid, passports: passports)
     }
     
-    func existingContext(_ req: Request, aid: Int, instance: Int) async throws -> AssessmentInstanceContext {
-        try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports)
+    func existingContext(_ req: Request, aid: Int, instance: Int, showServerSideError: Bool = false) async throws -> AssessmentInstanceContext {
+        let aic = try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports)
+        aic.showBossErrorMessage = showServerSideError
+        return aic
     }
     
     func processResponse(_ req: Request, variables: [String: String]) async throws -> ResponseStatus {
@@ -41,7 +45,7 @@ class AssessmentController {
               let email = variables["email"]
         else {
             logger.debug("Error validating aid, instance, or passportType:  aid = \(variables["aid"] ?? "nil"), instance = \(variables["instance"] ?? "nil"), passportType = \(variables["passportType"] ?? "nil")")
-            return .failure
+            return try await handleErrorResponse(req, variables)
         }
         
         let assessmentInstanceContext = try await existingContext(req, aid: aid, instance: instance)
@@ -59,7 +63,7 @@ class AssessmentController {
                   let passportModel = passports[passportType]
             else {
                 logger.debug("Error validating numeric responses or domain type:  ansNow = \(variables[labelNow] ?? "nil"), ansGoal = \(variables[labelGoal] ?? "nil"), passportDomainType = \(passports[passportType]?.domains[i].domainType.rawValue ?? "nil")")
-                return .failure
+                return try await handleErrorResponse(req, variables)
             }
             
             let passportDomain = passportModel.domains[i-1]
@@ -84,6 +88,7 @@ class AssessmentController {
         return .success(resultContext)
     }
     
+    
     private func validAnswer(_ answer: String?) -> Int? {
         guard let answer = answer,
               let int = Int(answer)
@@ -96,12 +101,27 @@ class AssessmentController {
         return int
     }
     
+    private func handleErrorResponse(_ req: Request, _ variables: [String: String]) async throws -> ResponseStatus {
+        guard let aid = Int(variables["aid"] ?? "") else {
+            throw Abort (.internalServerError, reason: "Form submitted without data to identify the assessment being used.")
+        }
+        let aidStr = try BenCrypt.encode(String(aid), keys: cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        let instance = Int(variables["instance"] ?? "")
+        if instance != nil {
+            let instanceStr = try BenCrypt.encode(String(instance!), keys: cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+            return .failure("/\(aidStr)/\(instanceStr)")
+        }
+        return .failure("/\(aidStr)")
+    }
+    
+    
     private func updateInstance(_ req: Request, instance: AssessmentInstance, name: String, email: String) async throws {
         instance.name = name
         instance.email = email
         instance.dateComplete = Date()
         try await instance.update(on: req.db)
     }
+    
     
     private func existingInstance(_ req: Request, aic: AssessmentInstanceContext) async throws -> AssessmentInstance {
         let instance = aic.id
@@ -111,18 +131,22 @@ class AssessmentController {
         return assessmentInstance
     }
     
+    
     private func updateResponseRow(_ req: Request, row: AssessmentInstanceDetail) async throws {
-        if let aidRow = try await AssessmentInstanceDetail.query(on: req.db)
-            .filter(\.$assessmentInstanceId == row.assessmentInstanceId)
-            .filter(\.$passportDomainType == row.passportDomainType)
-            .first()
-        {
+        if let aidRow = try await getResponseRow(req, assessmentInstanceId: row.assessmentInstanceId, domainType: row.passportDomainType) {
             try await aidRow.update(on: req.db)
         }
         else {
             let aidRow = AssessmentInstanceDetail(assessmentId: row.assessmentId, assessmentInstanceId: row.assessmentInstanceId, passportDomainType: row.passportDomainType, now: row.now, goal: row.goal)
             try await aidRow.save(on: req.db)
         }
-                                    
+    }
+    
+    
+    private func getResponseRow(_ req: Request, assessmentInstanceId: Int, domainType: PassportDomainType) async throws -> AssessmentInstanceDetail? {
+        try await AssessmentInstanceDetail.query(on: req.db)
+            .filter(\.$assessmentInstanceId == assessmentInstanceId)
+            .filter(\.$passportDomainType == domainType)
+            .first()
     }
 }

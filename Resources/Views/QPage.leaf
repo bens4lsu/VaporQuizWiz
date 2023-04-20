@@ -79,7 +79,9 @@
         }
                         
         
-        var pageComplete = #(pageComplete)
+        var pageComplete = #(pageComplete);
+        var showSSErrors = #(showBossErrorMessage);
+        var showLocalErrors = false;
         
         $(document).ready(function() {
             
@@ -107,6 +109,9 @@
             });
             
             display();
+            if (showSSErrors) {
+                $('#qb_error_ss').css('display', 'block');
+            }
             
             
         });
@@ -125,7 +130,8 @@
   
   <div class="wrapperbody clearfix container evolution-assessment-block">
     <div class="row">
-      <div class="qb_error">There were problems with some of the answers that were submitted.  Please correct the problems indicated below and resubmit.</div>
+      <div class="qb_error" id="qb_error_ss" style="display:none;">The assessment could not be evaluated, most likely due to missing answers.  Please check that all questions in the survey have an answer marked.</div>
+      <div class="qb_error" id="qb_error_cs" style="display:none;">There were problems with some of the answers that were submitted.  Please correct the problems indicated below and resubmit.</div>
       <form method="post" action="evaluate" name="quizform" id="quizform">
         
         #if(pageComplete == 0): #unsafeHTML(assessment.passportModel.intro) #endif
