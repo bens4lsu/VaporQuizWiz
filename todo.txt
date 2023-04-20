@@ -1,2 +1,2 @@
-1.  javascript validate as user goes page to page._bytesNeededToEncodeASN1Length
-2.  server side - handle a good user response if invalid input sent.
+1.  Security - write encrypted aid and instanceid on page
+2.  

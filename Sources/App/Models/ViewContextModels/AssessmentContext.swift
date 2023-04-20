@@ -1,36 +1,6 @@
-//
-//  File.swift
-//  
-//
-//  Created by Ben Schultz on 4/14/23.
-//
-
 import Foundation
 import Vapor
-import Fluent
 
-
-final class Assessment: Model, Content {
-    static let schema = "Assessments"
-    
-    @ID(custom: "AssessmentID")
-    var id: Int?
-
-    @Field(key: "Name")
-    var name: String
-    
-    @Field(key: "DisclosureText")
-    var disclosureText: String
-    
-    @Field(key: "LogoFileName")
-    var logoFileName: String
-    
-    @Field(key: "CompanyContactInfo")
-    var companyContactInfo: String
-
-    init() { }
-
-}
 
 final class AssessmentContext: Content {
     let id: Int
@@ -39,8 +9,9 @@ final class AssessmentContext: Content {
     let passportModel: PassportModel
     let logoFileName: String
     let companyContactInfo: String
+    let aidEncrypted: String
     
-    init(_ req: Request, id: Int, passports: Passports) async throws {
+    init(_ req: Request, id: Int, passports: Passports, keys: ConfigurationSettings.CryptKeys) async throws {
         let assessment = try await Assessment.find(id, on: req.db)
         
         guard let id = assessment?.id,
@@ -73,6 +44,8 @@ final class AssessmentContext: Content {
         else {
             throw Abort(.internalServerError, reason: "Can not initialize passport model.  Assessment name should contain either \"Walkaway\" or \"Expansion\"")
         }
+        
+        self.aidEncrypted = try BenCrypt.encode(String(id), keys: keys)
     }
     
     

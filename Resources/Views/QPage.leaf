@@ -382,7 +382,7 @@
           </div><!-- ends div class="form-group qb_answer" -->
         </div><!-- ends <div class="col-md form_element qb_question"> -->
         
-        <div style="display:none"><input type="text" name="aid" id="aid" value="#(assessment.id)"><input type="text" name="instance" id="instance" value="#(id)"><input type="text" name="passportType" value="#(assessment.passportModel.passportType)"></div>
+        <div style="display:none"><input type="text" name="aid" id="aid" value="#(assessment.aidEncrypted)"><input type="text" name="instance" id="instance" value="#(instanceIdEncrypted)"><input type="text" name="passportType" value="#(assessment.passportModel.passportType)"></div>
         
         <div id="progressbox">
           Progress:

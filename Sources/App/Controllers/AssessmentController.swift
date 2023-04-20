@@ -27,11 +27,11 @@ class AssessmentController {
     }
     
     func new(_ req: Request, aid: Int) async throws -> AssessmentInstanceContext {
-        try await AssessmentInstanceContext(req, forAssessmentId: aid, passports: passports)
+        try await AssessmentInstanceContext(req, forAssessmentId: aid, passports: passports, keys: cryptKeys)
     }
     
     func existingContext(_ req: Request, aid: Int, instance: Int) async throws -> AssessmentInstanceContext {
-        return try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports)
+        return try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports, keys:cryptKeys)
     }
     
     func processResponse(_ req: Request, variables: [String: String]) async throws -> ResponseStatus {
