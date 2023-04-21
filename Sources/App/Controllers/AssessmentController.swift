@@ -26,13 +26,16 @@ class AssessmentController {
         self.cryptKeys = cryptKeys
     }
     
+    
     func new(_ req: Request, aid: Int) async throws -> AssessmentInstanceContext {
         try await AssessmentInstanceContext(req, forAssessmentId: aid, passports: passports, keys: cryptKeys)
     }
     
+    
     func existingContext(_ req: Request, aid: Int, instance: Int) async throws -> AssessmentInstanceContext {
         return try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports, keys:cryptKeys)
     }
+    
     
     func reportContext(_ req: Request, aidStr: String, instanceStr: String) async throws -> AssessmentInstanceReportContext {
         let decodedAid = (try? BenCrypt.decode(aidStr, keys: cryptKeys)) ?? ""
@@ -47,7 +50,7 @@ class AssessmentController {
         var assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(withDetails: [])
         var assessmentInstanceDetails = [AssessmentInstanceDetailContext]()
         
-
+        
         guard let passport = passports[assessmentInstanceReportContext.passportType] else {
             throw Abort (.internalServerError, reason: "Could not find domain list for \(assessmentInstanceReportContext.passportType)")
         }
@@ -64,6 +67,12 @@ class AssessmentController {
         return assessmentInstanceReportContext
         
     }
+    
+    
+    func qaSummaryContext (_ req: Request, aidStr: String, instanceStr: String) async throws -> AssessmentInstanceReportContext {
+            return try await reportContext(req, aidStr: aidStr, instanceStr: instanceStr)
+    }
+    
     
     func processResponse(_ req: Request, variables: [String: String]) async throws -> ResponseStatus {
         
@@ -133,6 +142,7 @@ class AssessmentController {
         }
         return int
     }
+    
     
     private func handleErrorResponse(_ req: Request, _ variables: [String: String]) async throws -> ResponseStatus {
         guard let aid = Int(variables["aid"] ?? "") else {
