@@ -34,6 +34,37 @@ class AssessmentController {
         return try await AssessmentInstanceContext(req, assessmentId: aid, instance: instance, passports: passports, keys:cryptKeys)
     }
     
+    func reportContext(_ req: Request, aidStr: String, instanceStr: String) async throws -> AssessmentInstanceReportContext {
+        let decodedAid = (try? BenCrypt.decode(aidStr, keys: cryptKeys)) ?? ""
+        let decodedInstance = (try? BenCrypt.decode(instanceStr, keys: cryptKeys)) ?? ""
+        
+        guard let aid = Int(decodedAid),
+              let instance = Int(decodedInstance)
+        else {
+            throw Abort (.badRequest, reason: "Invalid assessment ID or instance ID token passed in request to retrieve report")
+        }
+        
+        var assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(withDetails: [])
+        var assessmentInstanceDetails = [AssessmentInstanceDetailContext]()
+        
+
+        guard let passport = passports[assessmentInstanceReportContext.passportType] else {
+            throw Abort (.internalServerError, reason: "Could not find domain list for \(assessmentInstanceReportContext.passportType)")
+        }
+        
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            for domain in passport.domains {
+                async let context = try getResponseRow(req, assessmentInstanceId: instance, domainType: domain.domainType)?.context(passportModel: passport)
+                if let addme = try await context {
+                    assessmentInstanceDetails.append(addme)
+                }
+            }
+        }
+        assessmentInstanceReportContext.updateDetails(details: assessmentInstanceDetails)
+        return assessmentInstanceReportContext
+        
+    }
+    
     func processResponse(_ req: Request, variables: [String: String]) async throws -> ResponseStatus {
         
         let decodedAid = (try? BenCrypt.decode(variables["aid"] ?? "", keys: cryptKeys)) ?? ""
