@@ -17,6 +17,7 @@ struct WebRouteController: RouteCollection {
         routes.get(":aid", use: newInstance)
         routes.post("evaluate", use: processAssessment)
         routes.get("report", ":aid", "instance", use: report)
+        routes.get("qasummary", ":aid", "instance", use: qaSummary)
     }
     
 
@@ -38,6 +39,16 @@ struct WebRouteController: RouteCollection {
         }
         let context = try await ac.reportContext(req, aidStr: aidStr, instanceStr: instanceStr)
         return try await req.view.render("Report", context)
+    }
+    
+    private func qaSummary(_ req: Request) async throws -> View {
+        guard let aidStr = req.parameters.get("aid"),
+              let instanceStr = req.parameters.get("instance")
+        else {
+            throw Abort(.badRequest, reason: "Invalid assessment or instance token on request for report")
+        }
+        let context = try await ac.qaSummaryContext(req, aidStr: aidStr, instanceStr: instanceStr)
+        return try await req.view.render("QASummary", context)
     }
     
     private func processAssessment(_ req: Request) async throws -> Response {
