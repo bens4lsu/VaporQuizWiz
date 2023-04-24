@@ -3,7 +3,7 @@
 <head>
   <title>Results - Report from the MyQuizWiz Test System</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" href="styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
+  <link rel="stylesheet" href="/styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
   <style>
@@ -33,21 +33,21 @@
         
         #tblCJPassportSummary td:nth-child(3) {
             width: 70px;
-            background-image: url("img/right_arrow.png");
+            background-image: url("/img/right_arrow.png");
             background-repeat: no-repeat;
             background-position: center;
         }
         
         #tblCJPassportSummary td.arrow-green {
-            background-image: url("img/green_arrow.png");
+            background-image: url("/img/green_arrow.png");
         }
         
         #tblCJPassportSummary td.arrow-yellow {
-            background-image: url("img/yellow_arrow.png");
+            background-image: url("/img/yellow_arrow.png");
         }
         
         #tblCJPassportSummary td.arrow-red {
-            background-image: url("img/red_arrow.png");
+            background-image: url("/img/red_arrow.png");
         }
         
         #divSummaryHeading {
@@ -121,7 +121,7 @@
       <div class="header-block">
         <div class="container">
           <div class="logo">
-            <a href="#"><img alt="Logo" src="logos/#(logoFileName)"></a>
+            <a href="#"><img alt="Logo" src="/logos/#(logoFileName)"></a>
           </div>
           <div class="header-caption">
             <div class="header-caption-box">
@@ -145,7 +145,7 @@
          <div class="report_paragraph condition99" style="display:block;">
             <div class="container">
               <div class="quiz-report-block #domain(result)">
-                <div class="quiz-report-block-img"><img src="img/#(dd.domainType).png"></div>
+                <div class="quiz-report-block-img"><img src="/img/#(dd.domainType).png"></div>
                 <h1>#capitalized(dd.domainType) Mindset</h1>
                 <h2>#unsafeHTML(dd.blurb)</h2>
                 <h2>Your Distance From Your Goal: #(dd.score)</h2>

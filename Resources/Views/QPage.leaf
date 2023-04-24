@@ -166,7 +166,7 @@
   <div class="wrapperbody clearfix container evolution-assessment-block">
     <div class="row">
       <div class="qb_error" id="qb_error_cs" style="display:none;">There were problems with some of the answers that were submitted.  Please correct the problems indicated below and resubmit.</div>
-      <form method="post" action="evaluate" name="quizform" id="quizform">
+      <form method="post" action="evaluation" name="quizform" id="quizform">
         
         #unsafeHTML(assessment.passportModel.intro)
 

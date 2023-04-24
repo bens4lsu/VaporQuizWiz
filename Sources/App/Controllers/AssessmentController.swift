@@ -40,14 +40,14 @@ class AssessmentController {
     func reportContext(_ req: Request, aidStr: String, instanceStr: String) async throws -> AssessmentInstanceReportContext {
         let decodedAid = (try? BenCrypt.decode(aidStr, keys: cryptKeys)) ?? ""
         let decodedInstance = (try? BenCrypt.decode(instanceStr, keys: cryptKeys)) ?? ""
-        
+                
         guard let aid = Int(decodedAid),
               let instance = Int(decodedInstance)
         else {
             throw Abort (.badRequest, reason: "Invalid assessment ID or instance ID token passed in request to retrieve report")
         }
         
-        var assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(withDetails: [])
+        let assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(withDetails: [])
         var assessmentInstanceDetails = [AssessmentInstanceDetailContext]()
         
         

@@ -15,9 +15,9 @@ struct WebRouteController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
         routes.get(":aid", use: newInstance)
-        routes.post("evaluate", use: processAssessment)
-        routes.get("report", ":aid", "instance", use: report)
-        routes.get("qasummary", ":aid", "instance", use: qaSummary)
+        routes.post("evaluation", use: processAssessment)
+        routes.get("report", ":aid", ":instance", use: report)
+        routes.get("qasummary", ":aid", ":instance", use: qaSummary)
     }
     
 
