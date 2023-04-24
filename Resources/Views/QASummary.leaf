@@ -1,207 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Results - Report from the MyQuizWiz Test System</title>
+  <title>Results</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" href="styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
+  <script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <style>
-  @page {margin:0px}
-  </style>
-  <style type="text/css" scoped="">
-       
-        #tblCJPassportSummary { 
-            text-align: center;
-            border: 1px solid black;
-            border-collapse: collapse;
-            margin-left:auto;
-            margin-right:auto;
-            position: relative;
-            top: -40px;
-            background-color: #fff;
-        }
-        
-        #tblCJPassportSummary th, #tblCJPassportSummary td {
-            padding: 18px;
-            border-bottom: 1px solid black;
-        }
-        
-        #tblCJPassportSummary td:first-child, #tblCJPassportSummary th:first-child {
-            border-right: 1px solid black;
-        }
-        
-        #tblCJPassportSummary td:nth-child(3) {
-            width: 70px;
-            background-image: url("img/right_arrow.png");
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-        
-        #tblCJPassportSummary td.arrow-green {
-            background-image: url("img/green_arrow.png");
-        }
-        
-        #tblCJPassportSummary td.arrow-yellow {
-            background-image: url("img/yellow_arrow.png");
-        }
-        
-        #tblCJPassportSummary td.arrow-red {
-            background-image: url("img/red_arrow.png");
-        }
-        
-        #divSummaryHeading {
-            height: 230px;
-            background-color: #79A2DF;
-            width: 90%;
-            margin-left:auto;
-            margin-right:auto;
-            font-size: 24pt;
-            text-align:center;
-            color:#fff;
-            padding-top: 85px;
-            max-width: 1100px;
-            border-radius: 10px;
-            line-height: 30pt;;
-        }
-        
-        #divname {
-            width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-            padding-bottom:80px;
-        }
-        
+  .pdf-banner-block{
+        background:url(../../styles/images/background_2.jpg) no-repeat center center;
+        background-size:cover;
+        display:inline-block;
+        width:100%;
+        margin-bottom:50px;
+        padding:0 15px;
+  }
+  .pdf-banner-caption{
+        background: rgba(255, 255, 255, 0.5);
+        padding:50px;
+        text-align:center;
+        margin:120px auto;
+  }
+  .pdf-banner-caption h2{
+        margin:0 0 20px;
+        padding:0!important;
+        color:#545454;
+  }
+  #addDemograhpicsHereIfOnTop{
+        padding-top:15px;
+  }
+  #addDemograhpicsHereIfOnTop table tr td:first-child{
+        text-align:left!important;
+  }
+  @media(max-width:767px){
+  .pdf-banner-caption{
+        margin:60px auto;
+  }
+  }
   </style>
 </head>
 <body>
-  <script type="text/javascript">
-        
-        function getFrameHeight() {
-           var height;
-
-            if (document.body.offsetHeight){ //ns6 syntax
-                    height = document.body.offsetHeight+30;
-            }
-            else if (document.body.scrollHeight){ //ie5+ syntax
-                    height = document.body.scrollHeight+20;
-            }
-            return height;
-        }
-                   
-            function sendFrameResizeRequest() {
-            var height;
-            height = getFrameHeight();
-            console.log(height);
-            parent.postMessage (height, "*");
-        }
-                        
-                $(window).on('load', function ()  {
-                    // window.load fires after document.ready.  document.ready is after full DOM is loaded
-                    // but window.loat waits until any graphics and frames are drawn as well.
-                        
-            $(window).resize(function(){
-                sendFrameResizeRequest();
-            });
-            
-            sendFrameResizeRequest();
-            // send the resize request again 2.5 seconds later.  Had test cases where the request
-            // was sent before styles applied somehow, and the frame wasn't big enough.
-            setTimeout(() => {  sendFrameResizeRequest(); }, 2500);
-            $(window).scrollTop(0);
-        });
-
-    
-  </script>
   <div class="main">
-    <div class="content" style="margin-left:0;">
-      <!-- Assessment-level custom code -->
-
-       <!-- Report Introduction  -->
-      <div class="header-block">
-        <div class="container">
-          <div class="logo">
-            <a href="#"><img alt="Logo" src="logos/#(logoFileName)"></a>
-          </div>
-          <div class="header-caption">
-            <div class="header-caption-box">
-              <h1>YOUR #capitalized(passportType) PASSPORT®</h1>
-              <h2>Secure Your Future to Live the Life You Really Want.</h2>
-              <h2>#(takerName)</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="congratulations-block" style="padding:50px 0;">
-        <div class="container">
-          <h3>Congratulations on completing Your #capitalized(passportType) Passport®!</h3>
-          <h3>You’ve taken an important step toward securing your future and living the life that you really want.</h3>
-          <p class="qb_res">In the sections below, you’ll find customized feedback on each of the 8 mindsets. Based upon the answers you’ve provided;&nbsp;we offer suggestions on how you can make even more progress in each area.</p>
-          <p class="qb_res">Then, at the end, we pull it all together to offer you overall recommendations and the opportunity for us to review your results and recommendations together.</p>
-        </div>
-      </div>
-      
-      #for(dd in domainDetails):
-         <div class="report_paragraph condition99" style="display:block;">
-            <div class="container">
-              <div class="quiz-report-block #domain(result)">
-                <div class="quiz-report-block-img"><img src="img/#(dd.domainType).png"></div>
-                <h1>#capitalized(dd.domainType) Mindset</h1>
-                <h2>#unsafeHTML(dd.blurb)</h2>
-                <h2>Your Distance From Your Goal: #(dd.score)</h2>
-                #unsafeHTML(dd.resultParagraph)
-              </div>
-            </div>
-          </div>
-      #endfor
-      
-      <div class="report_paragraph condition99" style="display:block;">
-        <div class="overall-block">
-          <div class="container">
-            <div class="quiz-report-block green">
-              <h1>Overall Recommendations</h1>
-              #unsafeHTML(overallParagraph)
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div id="divSummary">
-        <div id="divSummaryHeading" style="page-break-before: always;">
-          THANK YOU FOR COMPLETING YOUR #uppercased(passportType) PASSPORT®
-        </div>
-        <table id="tblCJPassportSummary">
-          <thead>
-            <tr>
-              <th>MINDSET</th>
-              <th>NOW</th>
-              <th>&nbsp;</th>
-              <th>GOAL</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-            #for(dd in domainDetails):
-            <tr>
-              <td>#uppercased(dd.domainType)</td>
-              <td>#(dd.now)</td>
-              <td class="arrow-#(dd.result)"></td>
-              <td>#(dd.goal)</td>
-            </tr>
-            #endfor
-            
-          </tbody>
-        </table>
-        <div id="divname">
-          Name: #(takerName)
-        </div>
-      </div>
-      <div class="container">
-        <div class="footer-block">
-          #(disclosureText)
-        </div>
+    <div class="pdf-banner-block">
+      <div class="pdf-banner-caption">
+        <h2 style="padding-bottom:2em;">MyQuizWiz Quiz/Survey Result Summary</h2>
+        <h2>C&amp;J Expansion Passport Master</h2>
       </div>
     </div>
+    <div class="content" style="margin-left:20px; margin-right:20px;">
+      
+      <div id="addDemograhpicsHereIfOnTop">
+      
+      </div>
+      
+      <table class="qb_res_question" style="width:100%; margin-bottom:20px" summary="">
+        
+        
+        <tr class="qb_res_question_row">
+          <td class="qb_res_question_number" style="width:30px;">1.</td>
+          <td class="qb_res_question_text" colspan="2">Your Readiness Mindset － Where are You NOW?</td>
+        </tr>
+        <tr class="qb_res_answer_row">
+          <td></td>
+          <td class="qb_res_answer_number">1.</td>
+          <td class="qb_res_answer_text">You haven't been able to establish an adequate emergency fund for unexpected expenses.</td>
+        </tr>
+       
+       
+        <tr class="qb_res_answer_row">
+          <td colspan="3" style="padding-left:34px;" class="qb_res_youranswer"><span class="qb_res_youranswerlabel">Respondent's Answer:</span> <span class="qb_res_youranswerresult">12</span></td>
+        </tr>
+      </table>
+      
+      <table class="qb_res_question" style="width:100%; margin-bottom:20px" summary="">
+        <tr class="qb_res_question_row">
+          <td class="qb_res_question_number" style="width:30px;">2.</td>
+          <td class="qb_res_question_text" colspan="2">Your Readiness Mindset － Where do You Want to Be — GOAL?</td>
+        </tr>
+        <tr class="qb_res_answer_row">
+          <td></td>
+          <td class="qb_res_answer_number">1.</td>
+          <td class="qb_res_answer_text">You don’t want to have a plan for an emergency fund.</td>
+        </tr>
+        
+        
+        <tr class="qb_res_answer_row">
+          <td colspan="3" style="padding-left:34px;" class="qb_res_youranswer"><span class="qb_res_youranswerlabel">Respondent's Answer:</span> <span class="qb_res_youranswerresult">12</span></td>
+        </tr>
+      </table>
+      
+
+    </div>
   </div>
+  <script>
+         $('#addDemograhpicsHereIfOnTop').append(demographics);
+         $('#addDemograhpicsHereIfOnTop').css('padding-bottom', '18px');
+         $('#addDemograhpicsHereIfOnTop').css('margin-bottom', '18px');
+         $('#addDemograhpicsHereIfOnTop').css('border-bottom', '2px solid #CDCDCD');
+         $('#addDemograhpicsHereIfOnTop').css('border-top', '2px solid #CDCDCD');
+        if (window.location != window.top.location){
+                $('h2').css('display','none');
+                $('#addDemograhpicsHereIfOnTop').css('display', 'none');
+        }
+
+
+  </script>
 </body>
 </html>

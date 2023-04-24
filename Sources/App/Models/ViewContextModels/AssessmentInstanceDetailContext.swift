@@ -17,6 +17,7 @@ class AssessmentInstanceDetailContext: Codable {
     let now: Int
     let goal: Int
     let blurb: String
+    let labels: [String]
 
     
     init(order: Int, domain: PassportDomain, now: Int, goal: Int) {
@@ -28,6 +29,7 @@ class AssessmentInstanceDetailContext: Codable {
         self.now = now
         self.goal = goal
         self.blurb = domain.blurb
+        self.labels = domain.labels
     }
     
     

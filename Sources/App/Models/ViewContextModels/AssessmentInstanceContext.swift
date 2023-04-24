@@ -54,6 +54,6 @@ final class AssessmentInstanceContext: Content, Error {
             throw Abort (.internalServerError, reason: "Attempt to generate a report context before the assessment taker's name is stored.")
         }
         
-        return AssessmentInstanceReportContext(id: self.id, assessment: self.assessment, details: details, takerName: name)
+        return AssessmentInstanceReportContext(id: self.id, assessment: self.assessment, details: details, takerName: name, takerEmail: email ?? "")
     }
 }

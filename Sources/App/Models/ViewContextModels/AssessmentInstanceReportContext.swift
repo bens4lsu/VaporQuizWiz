@@ -22,8 +22,9 @@ final class AssessmentInstanceReportContext: Content, Codable {
     var overallParagraph: String?
     let logoFileName: String
     let disclosureText: String
+    let takerEmail: String
     
-    init(id: Int, assessment: AssessmentContext, takerName: String) {
+    init(id: Int, assessment: AssessmentContext, takerName: String, takerEmail: String) {
         self.id = id
         self.domainDetails = []
         self.assessmentName = assessment.name
@@ -33,10 +34,11 @@ final class AssessmentInstanceReportContext: Content, Codable {
         self.passportType = assessment.passportModel.passportType
         self.logoFileName = assessment.logoFileName
         self.disclosureText = assessment.disclosureText
+        self.takerEmail = takerEmail
     }
     
-    convenience init(id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String) {
-        self.init(id: id, assessment: assessment, takerName: takerName)
+    convenience init(id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String, takerEmail: String) {
+        self.init(id: id, assessment: assessment, takerName: takerName, takerEmail: takerEmail)
         self.domainDetails = details
         self.overallDistance = Self.overallDistance(basedOn: details)
         self.overallResult = Self.overallResult(basedOn: details)

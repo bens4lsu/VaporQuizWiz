@@ -15,7 +15,7 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
         let oneEncoded = try BenCrypt.encode("1", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         let twoEncoded = try BenCrypt.encode("2", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         
-        let oneSeventyTwoEncoded = try BenCrypt.encode("170", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        let oneSeventyTwoEncoded = try BenCrypt.encode("172", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         
         let context = Context(message: """
             Successfully connected to passport host.
