@@ -16,6 +16,9 @@ public func configure(_ app: Application) throws {
     
     let settings = ConfigurationSettings()
     
+    app.http.server.configuration.port = settings.listenOnPort
+
+    
     var logger = Logger(label: "logger")
     logger.logLevel = settings.loggerLogLevel
     #if DEBUG

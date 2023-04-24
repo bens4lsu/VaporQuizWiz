@@ -27,6 +27,7 @@ class ConfigurationSettings: Decodable {
     let database: ConfigurationSettings.Database
     let logLevel: String
     let cryptKeys: ConfigurationSettings.CryptKeys
+    let listenOnPort: Int
     
     
     var certificateVerification: CertificateVerification {
@@ -52,6 +53,7 @@ class ConfigurationSettings: Decodable {
             self.database = decoder.database
             self.logLevel = decoder.logLevel
             self.cryptKeys = decoder.cryptKeys
+            self.listenOnPort = decoder.listenOnPort
         }
         catch {
             print ("Could not initialize app from Config.json. \n \(error)")
