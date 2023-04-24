@@ -6,15 +6,13 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
     try app.register(collection: WebRouteController(passports: passports, settings: settings, logger: logger))
     try app.register(collection: APIRouteController(passports: passports, settings: settings, logger: logger))
     
-    app.get { req async in
+    app.get { req async throws -> View in
         
         
         let oneEncoded = try BenCrypt.encode("1", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         let twoEncoded = try BenCrypt.encode("2", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-        logger.debug("http://localhost:8080/\(oneEncoded)")
-        logger.debug("http://localhost:8080/\(twoEncoded)")
         
-        return """
+        let context = """
             Successfully connected to passport host.
         
             WARNING:  The below information should be removed before deploying assessments for production:
@@ -22,6 +20,8 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
             https://passports.candjinnovations.com/\(oneEncoded)
             https://passports.candjinnovations.com/\(twoEncoded)
         """
+        
+        return try await req.view.render("message", context)
         
     }
 }
