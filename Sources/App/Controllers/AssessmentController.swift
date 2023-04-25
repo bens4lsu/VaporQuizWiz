@@ -67,12 +67,7 @@ class AssessmentController {
         return assessmentInstanceReportContext
         
     }
-    
-    
-    func qaSummaryContext (_ req: Request, aidStr: String, instanceStr: String) async throws -> AssessmentInstanceReportContext {
-        let reportContext = try await reportContext(req, aidStr: aidStr, instanceStr: instanceStr)
 
-    }
     
     
     func processResponse(_ req: Request, variables: [String: String]) async throws -> ResponseStatus {

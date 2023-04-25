@@ -34,6 +34,10 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
         
                 Walkawway mixed: <a href="/report/\(oneEncoded)/\(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/report/\(oneEncoded)/\(oneSeventyTwoEncoded)</a>
         
+            See qa summary for previously-takeen assessments:
+                
+                Walkawway mixed: <a href="/qasummary/\(oneEncoded)/\(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/qasummary/\(oneEncoded)/\(oneSeventyTwoEncoded)</a>
+        
         """)
         
         return try await req.view.render("message", context)
