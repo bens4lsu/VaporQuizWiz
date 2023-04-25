@@ -7,6 +7,8 @@
 
 import Foundation
 import Vapor
+import wkhtmltopdf
+
 
 class ResourceFileManager {
     
@@ -26,4 +28,5 @@ class ResourceFileManager {
         }
         return lines
     }
+
 }

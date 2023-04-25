@@ -8,6 +8,7 @@
 import Foundation
 import Vapor
 import Fluent
+import wkhtmltopdf
 
 class AssessmentController {
     
@@ -124,6 +125,22 @@ class AssessmentController {
         }
         let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext)
         return .success(resultContext)
+    }
+    
+    
+    func getPdf(_ req: Request, content: View) async throws -> Response {
+//        let decodedAid = (try? BenCrypt.decode(aidStr, keys: cryptKeys)) ?? ""
+//        guard let aid = Int(decodedAid),
+//              let assessment = try await Assessment.find(aid, on: req.db)
+//        else {
+//            throw Abort (.badRequest, reason: "Invalid aid requested for pdf")
+//        }
+        //let pdfFileName = "\(assessment.name)-\(pdfPageType.partOfReportName)-\(aidStr)-\(instanceStr)"
+        //let pdf = ResourceFileManager.createPdf(pdfFileName, content)
+        let document = Document()
+        document.pages = [Page(content.data)]
+        let pdf = try await document.generatePDF(on: req.application.threadPool, eventLoop: req.eventLoop).get()
+        return Response(status: .ok, headers: HTTPHeaders([("Content-Type", "application/pdf")]), body: .init(data: pdf))
     }
     
     

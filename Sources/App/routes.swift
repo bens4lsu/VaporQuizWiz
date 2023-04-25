@@ -1,5 +1,6 @@
 import Fluent
 import Vapor
+import wkhtmltopdf
 
 func routes(_ app: Application, _ passports: Passports, _ settings: ConfigurationSettings, _ logger: Logger) throws {
     
@@ -9,38 +10,39 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
     app.get { req async throws -> View in
         
         struct Context: Encodable {
-            let message: String
+            let oneEncoded: String
+            let twoEncoded: String
+            let oneSeventyTwoEncoded: String
         }
         
         let oneEncoded = try BenCrypt.encode("1", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         let twoEncoded = try BenCrypt.encode("2", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-        
         let oneSeventyTwoEncoded = try BenCrypt.encode("172", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         
-        let context = Context(message: """
-            Successfully connected to passport host.
-        
-            WARNING:  The below information should be removed before deploying assessments for production.
-        
-            
-            Run as new user --
-        
-                 Walkaway:  <a href="/\(oneEncoded)">https://passports.candjinnovations.com/\(oneEncoded)</a>
-            
-                 Expansion: <a href="/\(twoEncoded)">https://passports.candjinnovations.com/\(twoEncoded)</a>
-        
-        
-           See reports for previously-takeen assessments:
-        
-                Walkawway mixed: <a href="/report/\(oneEncoded)/\(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/report/\(oneEncoded)/\(oneSeventyTwoEncoded)</a>
-        
-            See qa summary for previously-takeen assessments:
-                
-                Walkawway mixed: <a href="/qasummary/\(oneEncoded)/\(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/qasummary/\(oneEncoded)/\(oneSeventyTwoEncoded)</a>
-        
-        """)
-        
+        let context = Context(oneEncoded: oneEncoded, twoEncoded: twoEncoded, oneSeventyTwoEncoded: oneSeventyTwoEncoded)
         return try await req.view.render("message", context)
         
+    }
+    
+    
+
+    app.get("pdftest") { req async throws -> Response in
+        // Create document. Margins in mm, can be set individually or all at once.
+        // If no margins are set, the default is 20mm.
+        let document = Document(margins: 15)
+        // Create a page from an HTML string.
+        let page1 = Page("<p>Page from direct HTML</p>")
+        
+        document.pages = [page1]
+        // Render to a PDF
+        let pdf = document.generatePDF(on: req.application.threadPool, eventLoop: req.eventLoop)
+        // Now you can return the PDF as a response, if you want
+        return try await pdf.map { data in
+            return Response(
+                status: .ok,
+                headers: HTTPHeaders([("Content-Type", "application/pdf")]),
+                body: .init(data: data)
+            )
+        }.get()
     }
 }

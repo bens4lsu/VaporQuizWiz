@@ -54,10 +54,6 @@ public func configure(_ app: Application) throws {
 
     try routes(app, passports, settings, logger)
     
-    #if DEBUG
-    let oneEncoded = try BenCrypt.encode("1", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-    let twoEncoded = try BenCrypt.encode("2", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-    logger.debug("http://localhost:8080/\(oneEncoded)")
-    logger.debug("http://localhost:8080/\(twoEncoded)")
-    #endif
+    print ("\(app.http.server.configuration.hostname)   \(app.http.server.configuration.port)   \(app.http.client.configuration.httpVersion)")
+ 
 }

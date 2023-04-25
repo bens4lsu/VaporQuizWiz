@@ -125,7 +125,7 @@
           </div>
           <div class="header-caption">
             <div class="header-caption-box">
-              <h1>YOUR #capitalized(passportType) PASSPORT®</h1>
+              <h1>Your #capitalized(passportType) Passport®</h1>
               <h2>Secure Your Future to Live the Life You Really Want.</h2>
               <h2>#(takerName)</h2>
             </div>

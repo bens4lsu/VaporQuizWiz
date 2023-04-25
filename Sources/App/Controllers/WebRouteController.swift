@@ -18,9 +18,10 @@ struct WebRouteController: RouteCollection {
         routes.post("evaluation", use: processAssessment)
         routes.get("report", ":aid", ":instance", use: report)
         routes.get("qasummary", ":aid", ":instance", use: qaSummary)
+        routes.get("pdf", ":page", ":aid", ":instance", use: self.returnPdf )
     }
     
-
+    
     private func newInstance(_ req: Request) async throws -> View {
         guard let aidStr = req.parameters.get("aid"),
               let aid = try Int(BenCrypt.decode(aidStr, keys: settings.cryptKeys))
@@ -30,25 +31,17 @@ struct WebRouteController: RouteCollection {
         let instance = try await ac.new(req, aid: aid)
         return try await req.view.render("QPage", instance)
     }
-    
+
     
     private func report(_ req: Request) async throws -> View {
-        guard let aidStr = req.parameters.get("aid"),
-              let instanceStr = req.parameters.get("instance")
-        else {
-            throw Abort(.badRequest, reason: "Invalid assessment or instance token on request for report")
-        }
+        let (aidStr, instanceStr) = try aidAndInstance(req)
         let context = try await ac.reportContext(req, aidStr: aidStr, instanceStr: instanceStr)
         return try await req.view.render("Report", context)
     }
     
     
     private func qaSummary(_ req: Request) async throws -> View {
-        guard let aidStr = req.parameters.get("aid"),
-              let instanceStr = req.parameters.get("instance")
-        else {
-            throw Abort(.badRequest, reason: "Invalid assessment or instance token on request for report")
-        }
+        let (aidStr, instanceStr) = try aidAndInstance(req)
         let context = try await ac.reportContext(req, aidStr: aidStr, instanceStr: instanceStr)
         return try await req.view.render("QASummary", context)
     }
@@ -66,4 +59,40 @@ struct WebRouteController: RouteCollection {
             return req.redirect(to: redirectPath)
         }
     }
+    
+    private func returnPdf (_ req: Request) async throws -> Response {
+        enum PDFPageType: String {
+            case report
+            case qAndASummary
+        }
+        
+        guard let pageType = req.parameters.get("page"),
+              let pdfPageType = PDFPageType(rawValue: pageType)
+        else {
+            throw Abort(.badRequest, reason: "PDF file requested with invalid document type.")
+        }
+        
+        var view: View
+        switch pdfPageType {
+        case .qAndASummary:
+            view = try await qaSummary(req)
+        case .report:
+            view = try await report(req)
+        }
+            
+        return try await ac.getPdf(req, content: view)
+    }
+    
+    
+    private func aidAndInstance(_ req: Request) throws -> (String, String) {
+        guard let aidStr = req.parameters.get("aid"),
+              let instanceStr = req.parameters.get("instance")
+        else {
+            throw Abort(.badRequest, reason: "Invalid assessment or instance token on request for report")
+        }
+        return (aidStr, instanceStr)
+    }
+    
+    
+    
 }

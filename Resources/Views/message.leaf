@@ -5,6 +5,36 @@
     <title></title>
 </head>
 <body>
-   <pre>#unsafeHTML(message)</pre>
+   <pre>
+   
+   Successfully connected to passport host.
+        
+    WARNING:  The below information should be removed before deploying assessments for production.
+
+    
+    Run as new user --
+
+         Walkaway:  <a href="#(oneEncoded)">https://passports.candjinnovations.com/#(oneEncoded)</a>
+    
+         Expansion: <a href="#(twoEncoded)">https://passports.candjinnovations.com/#(twoEncoded)</a>
+
+
+   See reports for previously-takeen assessments:
+
+        Walkaway mixed: <a href="/report/#(oneEncoded)/#(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/report/#(oneEncoded)/#(oneSeventyTwoEncoded)</a>
+
+    See qa summary for previously-takeen assessments:
+        
+        Walkaway mixed: <a href="/qasummary/#(oneEncoded)/#(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/qasummary/#(oneEncoded)/#(oneSeventyTwoEncoded)</a>
+
+    PDF of QA Summary:
+
+        <a href="/pdf/qAndASummary/#(oneEncoded)/#(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/pdf/qAndASummary/#(oneEncoded)/#(oneSeventyTwoEncoded)</a>
+
+    PDF of Report:
+
+        <a href="/pdf/report/#(oneEncoded)/#(oneSeventyTwoEncoded)">https://passports.candjinnovations.com/pdf/report/#(oneEncoded)/#(oneSeventyTwoEncoded)</a>
+
+    </pre>
 </body>
 </html>
