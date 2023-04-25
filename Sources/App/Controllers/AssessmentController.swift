@@ -128,17 +128,15 @@ class AssessmentController {
     }
     
     
-    func getPdf(_ req: Request, content: View) async throws -> Response {
-//        let decodedAid = (try? BenCrypt.decode(aidStr, keys: cryptKeys)) ?? ""
-//        guard let aid = Int(decodedAid),
-//              let assessment = try await Assessment.find(aid, on: req.db)
-//        else {
-//            throw Abort (.badRequest, reason: "Invalid aid requested for pdf")
-//        }
-        //let pdfFileName = "\(assessment.name)-\(pdfPageType.partOfReportName)-\(aidStr)-\(instanceStr)"
-        //let pdf = ResourceFileManager.createPdf(pdfFileName, content)
+    func pageToPDF(_ req: Request, pageType: PDFPageType, aidStr: String, instanceStr: String) async throws -> Response {
+        let port = req.application.http.server.configuration.port
+        let htmlPage = "http://localhost:\(port)/\(pageType.pathPartForHtmlVersion)/\(aidStr.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(instanceStr)"
+        print (htmlPage)
+        //let htmlPage = "https://cnn.com"
+        let docContent = try await ResourceFileManager.dataFromSource(req, url: htmlPage)
+        let page1 = Page(docContent)
         let document = Document()
-        document.pages = [Page(content.data)]
+        document.pages = [page1]
         let pdf = try await document.generatePDF(on: req.application.threadPool, eventLoop: req.eventLoop).get()
         return Response(status: .ok, headers: HTTPHeaders([("Content-Type", "application/pdf")]), body: .init(data: pdf))
     }
@@ -200,4 +198,8 @@ class AssessmentController {
             .filter(\.$passportDomainType == domainType)
             .first()
     }
+    
+
+        
+        
 }

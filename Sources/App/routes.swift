@@ -31,7 +31,9 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
         // If no margins are set, the default is 20mm.
         let document = Document(margins: 15)
         // Create a page from an HTML string.
-        let page1 = Page("<p>Page from direct HTML</p>")
+        
+        let docContent = try await ResourceFileManager.dataFromSource(req, url: "https://cnn.com")
+        let page1 = Page(docContent)
         
         document.pages = [page1]
         // Render to a PDF
@@ -46,3 +48,5 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
         }.get()
     }
 }
+
+

@@ -28,5 +28,18 @@ class ResourceFileManager {
         }
         return lines
     }
+    
+    static func dataFromSource(_ req: Request, url: String) async throws -> String {
+        let uri = URI(string: url)
+        let headers = HTTPHeaders([("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0")])
+        let response = try await req.client.get(uri, headers: headers).get()
+        
+        guard var body = response.body,
+              let returnString = body.readString(length: body.readableBytes)
+        else {
+            throw Abort (.internalServerError, reason: "Unable to read response from \(url)")
+        }
+        return returnString
+    }
 
 }

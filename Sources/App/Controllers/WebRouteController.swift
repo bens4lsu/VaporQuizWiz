@@ -61,26 +61,14 @@ struct WebRouteController: RouteCollection {
     }
     
     private func returnPdf (_ req: Request) async throws -> Response {
-        enum PDFPageType: String {
-            case report
-            case qAndASummary
-        }
         
         guard let pageType = req.parameters.get("page"),
               let pdfPageType = PDFPageType(rawValue: pageType)
         else {
             throw Abort(.badRequest, reason: "PDF file requested with invalid document type.")
         }
-        
-        var view: View
-        switch pdfPageType {
-        case .qAndASummary:
-            view = try await qaSummary(req)
-        case .report:
-            view = try await report(req)
-        }
-            
-        return try await ac.getPdf(req, content: view)
+        let (aidStr, instanceStr) = try aidAndInstance(req)
+        return try await ac.pageToPDF(req, pageType: pdfPageType, aidStr: aidStr, instanceStr: instanceStr)
     }
     
     
