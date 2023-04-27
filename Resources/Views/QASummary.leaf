@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Results</title>
-  <base href="http://localhost:8087" target="_blank">
+  <base href="http://#(hostname):#(port)" target="_blank">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link rel="stylesheet" href="/styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
   <script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
