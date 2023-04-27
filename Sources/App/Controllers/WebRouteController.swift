@@ -19,6 +19,7 @@ struct WebRouteController: RouteCollection {
         routes.get("report", ":aid", ":instance", use: report)
         routes.get("qasummary", ":aid", ":instance", use: qaSummary)
         routes.get("pdf", ":page", ":aid", ":instance", use: self.returnPdf )
+        routes.get("pdf-footer", use: pdfFooter)
     }
     
     
@@ -69,6 +70,19 @@ struct WebRouteController: RouteCollection {
         }
         let (aidStr, instanceStr) = try aidAndInstance(req)
         return try await ac.pageToPDF(req, pageType: pdfPageType, aidStr: aidStr, instanceStr: instanceStr)
+    }
+    
+    private func pdfFooter (_ req: Request) async throws -> View {
+        struct Context: Content {
+            let page: String
+            let ofPage: String
+        }
+        
+        let queryParameters = try req.query.decode([String:String].self)
+        //logger.debug("\(queryParameters["topage"])")
+        let page = queryParameters["page"] ?? ""
+        let ofPage = queryParameters["topage"] ?? "11"
+        return try await req.view.render("PdfFooter", Context(page: page, ofPage: ofPage))
     }
     
     

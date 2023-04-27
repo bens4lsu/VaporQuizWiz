@@ -27,6 +27,7 @@ class AssessmentController {
         self.cryptKeys = cryptKeys
     }
     
+    // MARK:  Passport methods
     
     func new(_ req: Request, aid: Int) async throws -> AssessmentInstanceContext {
         try await AssessmentInstanceContext(req, forAssessmentId: aid, passports: passports, keys: cryptKeys)
@@ -131,11 +132,10 @@ class AssessmentController {
     func pageToPDF(_ req: Request, pageType: PDFPageType, aidStr: String, instanceStr: String) async throws -> Response {
         let port = req.application.http.server.configuration.port
         let htmlPage = "http://localhost:\(port)/\(pageType.pathPartForHtmlVersion)/\(aidStr.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(instanceStr)"
-        print (htmlPage)
-        //let htmlPage = "https://cnn.com"
+        let wkArgs = ["--footer-html", "http://localhost:\(port)/pdf-footer?page=[page]&topage=11"]
         let docContent = try await ResourceFileManager.dataFromSource(req, url: htmlPage)
         let page1 = Page(docContent)
-        let document = Document()
+        let document = Document(size: "Letter", zoom: "1.3", top: 10, right: 10, bottom: 10, left: 10, wkArgs: wkArgs)
         document.pages = [page1]
         let pdf = try await document.generatePDF(on: req.application.threadPool, eventLoop: req.eventLoop).get()
         return Response(status: .ok, headers: HTTPHeaders([("Content-Type", "application/pdf")]), body: .init(data: pdf))
@@ -153,6 +153,9 @@ class AssessmentController {
         }
         return int
     }
+    
+    
+    // MARK: Private
     
     
     private func handleErrorResponse(_ req: Request, _ variables: [String: String]) async throws -> ResponseStatus {

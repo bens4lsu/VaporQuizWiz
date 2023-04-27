@@ -50,6 +50,7 @@
     .qb_res_answer_number {
         text-align: center;
         padding-right: 0.75em;
+        min-width: 5em;
     }
     
   
