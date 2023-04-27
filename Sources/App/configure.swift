@@ -16,7 +16,7 @@ public func configure(_ app: Application) throws {
     
     let settings = ConfigurationSettings()
     
-    app.http.server.configuration.port = settings.listenOnPort
+    app.http.server.configuration.port = settings.host.listenOnPort
 
     
     var logger = Logger(label: "logger")

@@ -33,17 +33,19 @@ class ConfigurationSettings: Decodable {
         let bottom: Int
         let left: Int
         let size: String
-        
-        var document: Document {
-            Document(size: self.size, zoom: self.zoom, top: self.top, right: self.right, bottom: self.bottom, left: self.left, path: self.path)
-        }
+    }
+    
+    struct Host: Decodable, Encodable {
+        let listenOnPort: Int
+        let proto: String
+        let server: String
     }
     
     let database: ConfigurationSettings.Database
     let logLevel: String
     let cryptKeys: ConfigurationSettings.CryptKeys
-    let listenOnPort: Int
     let wkhtmltopdf: Wkhtmltopdf
+    let host: Host
     
     var certificateVerification: CertificateVerification {
         if database.certificateVerificationString == "noHostnameVerification" {
@@ -69,8 +71,8 @@ class ConfigurationSettings: Decodable {
             self.database = decoder.database
             self.logLevel = decoder.logLevel
             self.cryptKeys = decoder.cryptKeys
-            self.listenOnPort = decoder.listenOnPort
             self.wkhtmltopdf = decoder.wkhtmltopdf
+            self.host = decoder.host
         }
         catch {
             print ("Could not initialize app from Config.json. \n \(error)")

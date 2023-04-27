@@ -17,21 +17,30 @@ class AssessmentController {
         case failure(String)  // string is for redirect page
     }
     
-    var passports: Passports
-    var logger: Logger
-    var cryptKeys: ConfigurationSettings.CryptKeys
+    let passports: Passports
+    let logger: Logger
+    let cryptKeys: ConfigurationSettings.CryptKeys
+    let host: ConfigurationSettings.Host
     
     var makeDocument: () -> Document
     
-    init(passports: Passports, logger: Logger, cryptKeys: ConfigurationSettings.CryptKeys, wkhtmltopdf: ConfigurationSettings.Wkhtmltopdf, port: Int) {
+    init(passports: Passports, logger: Logger, settings: ConfigurationSettings) {
         self.passports = passports
         self.logger = logger
-        self.cryptKeys = cryptKeys
+        self.cryptKeys = settings.cryptKeys
+        self.host = settings.host
         
-        let wkArgs = ["--footer-html", "http://localhost:\(port)/pdf-footer?page=[page]&topage=[topage]"]   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
+        let wkArgs = ["--footer-html", "\(settings.host.proto)://\(settings.host.server):\(settings.host.listenOnPort)/pdf-footer?page=[page]&topage=[topage]"]   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
         
         self.makeDocument = {
-            Document(size: wkhtmltopdf.size, zoom: wkhtmltopdf.zoom, top: wkhtmltopdf.top, right: wkhtmltopdf.right, bottom: wkhtmltopdf.bottom, left: wkhtmltopdf.left, path: wkhtmltopdf.path, wkArgs: wkArgs)
+            Document(size: settings.wkhtmltopdf.size
+                     , zoom: settings.wkhtmltopdf.zoom
+                     , top: settings.wkhtmltopdf.top
+                     , right: settings.wkhtmltopdf.right
+                     , bottom: settings.wkhtmltopdf.bottom
+                     , left: settings.wkhtmltopdf.left
+                     , path: settings.wkhtmltopdf.path
+                     , wkArgs: wkArgs)
         }
     }
     
@@ -57,7 +66,7 @@ class AssessmentController {
             throw Abort (.badRequest, reason: "Invalid assessment ID or instance ID token passed in request to retrieve report")
         }
         
-        let assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(withDetails: [])
+        let assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(withDetails: [], host: host)
         var assessmentInstanceDetails = [AssessmentInstanceDetailContext]()
         
         
@@ -132,7 +141,7 @@ class AssessmentController {
             let tmpInstance = try await existingInstance(req, aic: assessmentInstanceContext)
             async let _ = updateInstance(req, instance: tmpInstance, name: name, email: email)
         }
-        let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext)
+        let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext, host: host)
         return .success(resultContext)
     }
     
