@@ -36,7 +36,12 @@ final class AssessmentInstanceReportContext: Content, Codable {
         self.logoFileName = assessment.logoFileName
         self.disclosureText = assessment.disclosureText
         self.takerEmail = takerEmail
-        self.host = host
+        
+        var port = host.listenOnPort
+        if host.server != "localhost" && host.server != "127.0.0.1" {
+            port = -1
+        }
+        self.host = ConfigurationSettings.Host(listenOnPort: port, proto: host.proto, server: host.server)
     }
     
     convenience init(id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String, takerEmail: String, host: ConfigurationSettings.Host) {
