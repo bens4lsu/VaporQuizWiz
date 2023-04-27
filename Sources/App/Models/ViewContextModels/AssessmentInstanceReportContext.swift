@@ -38,7 +38,7 @@ final class AssessmentInstanceReportContext: Content, Codable {
         self.takerEmail = takerEmail
         
         var port = host.listenOnPort
-        if host.server != "localhost" && host.server != "127.0.0.1" {
+        if host.server != "localhost" && host.server != "127.0.0.1" {   //leaf template takes the port out of the <base> tag if the port < 0
             port = -1
         }
         self.host = ConfigurationSettings.Host(listenOnPort: port, proto: host.proto, server: host.server)

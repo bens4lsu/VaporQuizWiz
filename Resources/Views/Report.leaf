@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Results - Report from the MyQuizWiz Test System</title>
-  <base href="#(host.proto)://#(host.server):#if(host.port > 0):#(host.listenOnPort)#endif" target="_blank">
+  <base href="#(host.proto)://#(host.server):#if(host.listenOnPort > 0):#(host.listenOnPort)#endif" target="_blank">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link rel="stylesheet" href="/styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -93,7 +93,6 @@
             function sendFrameResizeRequest() {
             var height;
             height = getFrameHeight();
-            console.log(height);
             parent.postMessage (height, "*");
         }
                         
