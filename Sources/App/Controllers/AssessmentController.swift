@@ -21,10 +21,18 @@ class AssessmentController {
     var logger: Logger
     var cryptKeys: ConfigurationSettings.CryptKeys
     
-    init(passports: Passports, logger: Logger, cryptKeys: ConfigurationSettings.CryptKeys) {
+    var makeDocument: () -> Document
+    
+    init(passports: Passports, logger: Logger, cryptKeys: ConfigurationSettings.CryptKeys, wkhtmltopdf: ConfigurationSettings.Wkhtmltopdf, port: Int) {
         self.passports = passports
         self.logger = logger
         self.cryptKeys = cryptKeys
+        
+        let wkArgs = ["--footer-html", "http://localhost:\(port)/pdf-footer?page=[page]&topage=[topage]"]   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
+        
+        self.makeDocument = {
+            Document(size: wkhtmltopdf.size, zoom: wkhtmltopdf.zoom, top: wkhtmltopdf.top, right: wkhtmltopdf.right, bottom: wkhtmltopdf.bottom, left: wkhtmltopdf.left, path: wkhtmltopdf.path, wkArgs: wkArgs)
+        }
     }
     
     // MARK:  Passport methods
@@ -132,10 +140,10 @@ class AssessmentController {
     func pageToPDF(_ req: Request, pageType: PDFPageType, aidStr: String, instanceStr: String) async throws -> Response {
         let port = req.application.http.server.configuration.port
         let htmlPage = "http://localhost:\(port)/\(pageType.pathPartForHtmlVersion)/\(aidStr.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(instanceStr)"
-        let wkArgs = ["--footer-html", "http://localhost:\(port)/pdf-footer?page=[page]&topage=11"]
         let docContent = try await ResourceFileManager.dataFromSource(req, url: htmlPage)
         let page1 = Page(docContent)
-        let document = Document(size: "Letter", zoom: "1.3", top: 10, right: 10, bottom: 10, left: 10, wkArgs: wkArgs)
+        //let document = Document(size: "Letter", zoom: "1.3", top: 10, right: 10, bottom: 10, left: 10, wkArgs: wkArgs)
+        let document = makeDocument()
         document.pages = [page1]
         let pdf = try await document.generatePDF(on: req.application.threadPool, eventLoop: req.eventLoop).get()
         return Response(status: .ok, headers: HTTPHeaders([("Content-Type", "application/pdf")]), body: .init(data: pdf))

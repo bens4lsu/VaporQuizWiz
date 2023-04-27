@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+  <style>
+      @font-face {
+        font-family: 'Montserrat-Regular';
+        src: url('/styles/fonts/Montserrat-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+    .pdf-footer {
+        font-family: 'Montserrat-Regular';
+        font-size: 12px;
+        padding: 4px 4px 0 0;
+        margin: 0 4px 0 0;
+        border-top: 1px solid #777;
+        text-align: center;
+    }
+  </style>
+</head>
+<body>
+    <div class="pdf-footer">
+        <span class="page">#(page)</span> of <span class="topage">#(ofPage)</span>
+    </div>
+</body>
+</html>

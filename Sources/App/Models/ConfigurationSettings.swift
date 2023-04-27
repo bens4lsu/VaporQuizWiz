@@ -7,6 +7,7 @@
 
 import Vapor
 import NIOSSL
+import wkhtmltopdf
 
 class ConfigurationSettings: Decodable {
     
@@ -24,11 +25,25 @@ class ConfigurationSettings: Decodable {
         let iv: String
     }
     
+    struct Wkhtmltopdf: Decodable {
+        let path: String
+        let zoom: String
+        let top: Int
+        let right: Int
+        let bottom: Int
+        let left: Int
+        let size: String
+        
+        var document: Document {
+            Document(size: self.size, zoom: self.zoom, top: self.top, right: self.right, bottom: self.bottom, left: self.left, path: self.path)
+        }
+    }
+    
     let database: ConfigurationSettings.Database
     let logLevel: String
     let cryptKeys: ConfigurationSettings.CryptKeys
     let listenOnPort: Int
-    
+    let wkhtmltopdf: Wkhtmltopdf
     
     var certificateVerification: CertificateVerification {
         if database.certificateVerificationString == "noHostnameVerification" {
@@ -43,6 +58,7 @@ class ConfigurationSettings: Decodable {
     var loggerLogLevel: Logger.Level {
         Logger.Level(rawValue: logLevel) ?? .error
     }
+
     
     init() {
         let path = DirectoryConfiguration.detect().resourcesDirectory
@@ -54,6 +70,7 @@ class ConfigurationSettings: Decodable {
             self.logLevel = decoder.logLevel
             self.cryptKeys = decoder.cryptKeys
             self.listenOnPort = decoder.listenOnPort
+            self.wkhtmltopdf = decoder.wkhtmltopdf
         }
         catch {
             print ("Could not initialize app from Config.json. \n \(error)")

@@ -15,7 +15,7 @@ struct APIRouteController: RouteCollection {
     let logger: Logger
     
     init(passports: Passports, settings: ConfigurationSettings, logger: Logger) {
-        self.ac = AssessmentController(passports: passports, logger: logger, cryptKeys: settings.cryptKeys)
+        self.ac = AssessmentController(passports: passports, logger: logger, cryptKeys: settings.cryptKeys, wkhtmltopdf: settings.wkhtmltopdf, port: settings.listenOnPort)
         self.settings = settings
         self.logger = logger
     }
