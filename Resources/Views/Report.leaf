@@ -76,6 +76,7 @@
   </style>
 </head>
 <body>
+  base href="#(host.proto)://#(host.server):#if(host.listenOnPort > 0):#(host.listenOnPort)#endif" target="_blank"
   <script type="text/javascript">
         
         function getFrameHeight() {
