@@ -16,7 +16,6 @@
         padding:0 15px;
   }
   .pdf-banner-caption{
-        background: rgba(255, 255, 255, 0.5);
         padding:50px;
         text-align:center;
         margin:120px auto;
