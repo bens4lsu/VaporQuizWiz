@@ -40,7 +40,7 @@ class AssessmentController {
                      , bottom: settings.wkhtmltopdf.bottom
                      , left: settings.wkhtmltopdf.left
                      , path: settings.wkhtmltopdf.path
-                     , wkArgs: wkArgs)
+                     , wkArgs: [])
         }
     }
     
