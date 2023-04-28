@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>Results - Report from the MyQuizWiz Test System </title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="/styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen" />
+<script   src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="   crossorigin="anonymous"></script>
+<head>
+<body>
+
+    <script>
+    
+        $(document).ready(function() {
+            let url = document.location.href
+            url = url.replace('/pdf/', '/pdfresult/');
+            window.location.replace(url);
+        });
+        
+
+    </script>
+
+
+<div class="header-block">
+<div class="container">
+<div class="header-caption">
+<div class="header-caption-box">
+<h1>Please wait a moment.  Compiling your results and generating your custom report.</h1>
+</div>
+<img src="/img/progress.gif" alt="...." style="height:51px; position: static; display: block; margin: auto;">
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

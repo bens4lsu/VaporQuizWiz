@@ -42,11 +42,17 @@ class ConfigurationSettings: Decodable {
         let server: String
     }
     
+    struct Email: Decodable {
+        let fromName: String
+        let fromAddress: String
+    }
+    
     let database: ConfigurationSettings.Database
     let logLevel: String
     let cryptKeys: ConfigurationSettings.CryptKeys
     let wkhtmltopdf: Wkhtmltopdf
     let host: Host
+    let email: Email
     
     var certificateVerification: CertificateVerification {
         if database.certificateVerificationString == "noHostnameVerification" {
@@ -74,6 +80,7 @@ class ConfigurationSettings: Decodable {
             self.cryptKeys = decoder.cryptKeys
             self.wkhtmltopdf = decoder.wkhtmltopdf
             self.host = decoder.host
+            self.email = decoder.email
         }
         catch {
             print ("Could not initialize app from Config.json. \n \(error)")

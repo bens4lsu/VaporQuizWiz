@@ -22,6 +22,7 @@ class AssessmentController {
     let cryptKeys: ConfigurationSettings.CryptKeys
     let host: ConfigurationSettings.Host
     let baseString: String
+    let emailConfig: ConfigurationSettings.Email
     
     var makeDocument: () -> Document
     
@@ -30,6 +31,7 @@ class AssessmentController {
         self.logger = logger
         self.cryptKeys = settings.cryptKeys
         self.host = settings.host
+        self.emailConfig = settings.email
         
         var portStr = ":\(settings.host.listenOnPort)"
         if settings.host.server != "localhost" && host.server != "127.0.0.1" {
@@ -258,7 +260,7 @@ class AssessmentController {
         let body = try await bodyTask
         await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for recipient in distributionList {
-                let mailqEntry = MailQueue(emailAddressFrom: "movemetoconfig", emailAddressTo: recipient, subject: subjectLine, body: body)
+                let mailqEntry = MailQueue(emailAddressFrom: emailConfig.fromAddress, emailAddressTo: recipient, subject: subjectLine, body: body, fromName: emailConfig.fromName)
                 async let _ = mailqEntry.save(on: req.db(.emailDb))
             }
         }
