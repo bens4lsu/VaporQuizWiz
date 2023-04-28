@@ -145,6 +145,7 @@ class AssessmentController {
             }
             let tmpInstance = try await existingInstance(req, aic: assessmentInstanceContext)
             async let _ = updateInstance(req, instance: tmpInstance, name: name, email: email)
+            async let _ = requestEmailNotifications(req, assessmentId: aid)
         }
         let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext, host: host)
         return .success(resultContext)
@@ -222,6 +223,18 @@ class AssessmentController {
             .filter(\.$assessmentInstanceId == assessmentInstanceId)
             .filter(\.$passportDomainType == domainType)
             .first()
+    }
+    
+    private func requestEmailNotifications(_ req: Request, assessmentId: Int) async throws {
+        
+        let distributionList = ["ben@concordbusinessservicesllc.com"]
+        
+        await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            for recipient in distributionList {
+                let mailqEntry = MailQueue(emailAddressFrom: "movemetoconfig", emailAddressTo: recipient, subject: "configure subject", body: "test")
+                async let _ = mailqEntry.save(on: req.db(.emailDb))
+            }
+        }
     }
     
 

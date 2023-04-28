@@ -18,6 +18,7 @@ class ConfigurationSettings: Decodable {
         let password: String
         let database: String
         let certificateVerificationString: String
+        let mailDb: String
     }
     
     struct CryptKeys: Decodable {

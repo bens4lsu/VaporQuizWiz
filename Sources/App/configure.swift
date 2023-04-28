@@ -38,6 +38,15 @@ public func configure(_ app: Application) throws {
         tlsConfiguration: tls
     ), as: .mysql)
     
+    app.databases.use(.mysql(
+        hostname: settings.database.hostname,
+        port: settings.database.port,
+        username: settings.database.username,
+        password: settings.database.password,
+        database: "Mailer",
+        tlsConfiguration: tls
+    ), as: .emailDb)
+    
     app.views.use(.leaf)
     app.leaf.tags["indexedValue"] = IndexedValue()
     
