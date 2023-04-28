@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Results#(host.listenOnPort)</title>
-    <base href="#(host.proto)://#(host.server):#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif" target="_blank">
+  <base href="#(host.proto)://#(host.server):#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif" target="_blank">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link rel="stylesheet" href="#(host.proto)://#(host.server)#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif/styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
   <script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
@@ -63,8 +63,8 @@
   </style>
 </head>
 <body>
-  <div class="main">
-    <div class="pdf-banner-block">
+  <div class="main">#(host.proto)://#(host.server)#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif/styles/blessy-sc-nocolor.css?v=01
+     <div class="pdf-banner-block">
       <div class="pdf-banner-caption">
         <h2 style="padding-bottom:2em;">#(assessmentName)</h2>
         <h2>Response Summary</h2>
