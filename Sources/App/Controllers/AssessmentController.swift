@@ -30,7 +30,12 @@ class AssessmentController {
         self.cryptKeys = settings.cryptKeys
         self.host = settings.host
         
-        let wkArgs = ["--footer-html", "\(settings.host.proto)://\(settings.host.server):\(settings.host.listenOnPort)/pdf-footer?page=[page]&topage=[topage]"]   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
+        var portStr = ":\(settings.host.listenOnPort)"
+        if settings.host.server != "localhost" && host.server != "127.0.0.1" {
+            portStr = ""
+        }
+        let baseString = "\(settings.host.proto)://\(settings.host.server)\(portStr)/pdf-footer?page=[page]&topage=[topage]"   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
+        let wkArgs = ["--footer-html", baseString]
         
         self.makeDocument = {
             Document(size: settings.wkhtmltopdf.size
@@ -40,7 +45,7 @@ class AssessmentController {
                      , bottom: settings.wkhtmltopdf.bottom
                      , left: settings.wkhtmltopdf.left
                      , path: settings.wkhtmltopdf.path
-                     , wkArgs: [])
+                     , wkArgs: wkArgs)
         }
     }
     

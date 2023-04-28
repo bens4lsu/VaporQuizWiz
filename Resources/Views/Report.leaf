@@ -77,9 +77,7 @@
 </head>
 <body>
 
-<div>#(host.proto)://#(host.server)#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif/</div>
-<div>#(host.proto)://#(host.server)#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif/styles/blessy-sc-nocolor.css?v=01</div>
-  <script type="text/javascript">
+    <script type="text/javascript">
         
         function getFrameHeight() {
            var height;
