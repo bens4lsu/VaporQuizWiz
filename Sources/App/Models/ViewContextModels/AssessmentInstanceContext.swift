@@ -19,6 +19,11 @@ final class AssessmentInstanceContext: Content, Error {
     var showBossErrorMessage: Bool = false
     var instanceIdEncrypted: String
     
+    var instanceIdEncryptedForUrl: String {
+        instanceIdEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+    }
+
+    
     init(_ req: Request, forAssessmentId aid: Int, passports: Passports, keys: ConfigurationSettings.CryptKeys) async throws {
         let ai = AssessmentInstance(forAID: aid)
         try await ai.save(on: req.db)

@@ -21,6 +21,7 @@ class AssessmentController {
     let logger: Logger
     let cryptKeys: ConfigurationSettings.CryptKeys
     let host: ConfigurationSettings.Host
+    let baseString: String
     
     var makeDocument: () -> Document
     
@@ -34,8 +35,10 @@ class AssessmentController {
         if settings.host.server != "localhost" && host.server != "127.0.0.1" {
             portStr = ""
         }
-        let baseString = "\(settings.host.proto)://\(settings.host.server)\(portStr)/pdf-footer?page=[page]&topage=[topage]"   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
-        let wkArgs = ["--footer-html", baseString]
+        let baseString = "\(settings.host.proto)://\(settings.host.server)\(portStr)"
+        self.baseString = baseString
+        let footerString = baseString + "/pdf-footer?page=[page]&topage=[topage]"   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
+        let wkArgs = ["--footer-html", footerString]
         
         self.makeDocument = {
             Document(size: settings.wkhtmltopdf.size
@@ -145,7 +148,7 @@ class AssessmentController {
             }
             let tmpInstance = try await existingInstance(req, aic: assessmentInstanceContext)
             async let _ = updateInstance(req, instance: tmpInstance, name: name, email: email)
-            async let _ = requestEmailNotifications(req, assessmentId: aid)
+            async let _ = requestEmailNotifications(req, assessmentInstanceContext: assessmentInstanceContext)
         }
         let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext, host: host)
         return .success(resultContext)
@@ -225,16 +228,53 @@ class AssessmentController {
             .first()
     }
     
-    private func requestEmailNotifications(_ req: Request, assessmentId: Int) async throws {
+    private func requestEmailNotifications(_ req: Request, assessmentInstanceContext: AssessmentInstanceContext) async throws {
+        struct SubjectContext: Content {
+            let assessmentName: String
+        }
+        
+        struct BodyContext: Content {
+            let takerName: String
+            let takerEmail: String
+            let reportLink: String
+            let qaLink: String
+        }
+        
+        guard let name = assessmentInstanceContext.name,
+              let email = assessmentInstanceContext.email
+        else {
+            throw Abort (.internalServerError, reason: "Attempt to send email without name or email address.")
+        }
         
         let distributionList = ["ben@concordbusinessservicesllc.com"]
+        let subjectContext = SubjectContext(assessmentName: assessmentInstanceContext.assessment.name)
+        let reportPdfLink = reportPdfLink(aic: assessmentInstanceContext)
+        let qaPdfLink = qaPdfLink(aic: assessmentInstanceContext)
+        let bodyContext = BodyContext(takerName: name, takerEmail: email, reportLink: reportPdfLink, qaLink: qaPdfLink)
         
+        async let subjectLineTask = viewToString(req, "EmailSubject", subjectContext)
+        async let bodyTask = viewToString(req, "EmailBody", bodyContext)
+        let subjectLine = try await subjectLineTask
+        let body = try await bodyTask
         await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for recipient in distributionList {
-                let mailqEntry = MailQueue(emailAddressFrom: "movemetoconfig", emailAddressTo: recipient, subject: "configure subject", body: "test")
+                let mailqEntry = MailQueue(emailAddressFrom: "movemetoconfig", emailAddressTo: recipient, subject: subjectLine, body: body)
                 async let _ = mailqEntry.save(on: req.db(.emailDb))
             }
         }
+    }
+    
+    private func viewToString(_ req: Request, _ template: String, _ context: any Content) async throws -> String {
+        let data = try await req.view.render(template, context).get().data
+        return String(buffer: data).replacingOccurrences(of: "&amp;", with: "&")
+    }
+    
+    private func reportPdfLink(aic: AssessmentInstanceContext) -> String {
+        "\(baseString)/pdf/report/\(aic.assessment.aidEncryptedForUrl))/\(aic.instanceIdEncryptedForUrl)"
+    }
+    
+    private func qaPdfLink(aic: AssessmentInstanceContext) -> String {
+        "\(baseString)/pdf/qAndASummary/\(aic.assessment.aidEncryptedForUrl)/\(aic.instanceIdEncryptedForUrl)"
     }
     
 

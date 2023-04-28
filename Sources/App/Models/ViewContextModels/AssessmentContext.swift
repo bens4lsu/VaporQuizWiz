@@ -11,6 +11,10 @@ final class AssessmentContext: Content {
     let companyContactInfo: String
     let aidEncrypted: String
     
+    var aidEncryptedForUrl: String {
+        aidEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+    }
+    
     init(_ req: Request, id: Int, passports: Passports, keys: ConfigurationSettings.CryptKeys) async throws {
         let assessment = try await Assessment.find(id, on: req.db)
         

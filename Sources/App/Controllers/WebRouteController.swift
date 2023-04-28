@@ -18,7 +18,8 @@ struct WebRouteController: RouteCollection {
         routes.post("evaluation", use: processAssessment)
         routes.get("report", ":aid", ":instance", use: report)
         routes.get("qasummary", ":aid", ":instance", use: qaSummary)
-        routes.get("pdf", ":page", ":aid", ":instance", use: self.returnPdf )
+        routes.get("pdf", "**", use: pdfLanding)
+        routes.get("pdfresult", ":page", ":aid", ":instance", use: self.returnPdf )
         routes.get("pdf-footer", use: pdfFooter)
     }
     
@@ -59,6 +60,10 @@ struct WebRouteController: RouteCollection {
         case .failure(let redirectPath):
             return req.redirect(to: redirectPath)
         }
+    }
+    
+    private func pdfLanding(_ req: Request) async throws -> View {
+        try await req.view.render("PDFLander")
     }
     
     private func returnPdf (_ req: Request) async throws -> Response {
