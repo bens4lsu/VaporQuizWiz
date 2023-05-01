@@ -150,7 +150,9 @@ class AssessmentController {
             }
             let tmpInstance = try await existingInstance(req, aic: assessmentInstanceContext)
             async let _ = updateInstance(req, instance: tmpInstance, name: name, email: email)
-            async let _ = requestEmailNotifications(req, assessmentInstanceContext: assessmentInstanceContext)
+            if emailConfig.enableEmailSend {
+                async let _ = requestEmailNotifications(req, assessmentInstanceContext: assessmentInstanceContext)
+            }
         }
         let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext, host: host)
         return .success(resultContext)

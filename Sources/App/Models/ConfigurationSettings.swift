@@ -45,6 +45,7 @@ class ConfigurationSettings: Decodable {
     struct Email: Decodable {
         let fromName: String
         let fromAddress: String
+        let enableEmailSend: Bool
     }
     
     let database: ConfigurationSettings.Database

@@ -1,13 +1,19 @@
 <html>
 <body>
 <div>Dear Advisor,</div>
+<div>&nbsp;</div>
 <div>This automatic, system-generated message lets you know that someone has completed your assessment. You can access the PDF of the respondent's report <a href="#(reportLink)">here</a>.</div>
+<div>&nbsp;</div>
 <div>To print it, just use your browser functionality to download the PDF of the report.</div>
+<div>&nbsp;</div>
 <div>You can also download and print a summary of each question and answer <a href="#(qaLink)">here</a>.</div>
+<div>&nbsp;</div>
 <div>Name of respondent: #(takerName)</div>
 <div>Email of respondent: #(takerEmail)</div>
+<div>&nbsp;</div>
 <div>If you have any questions or encounter any problems, please email <a mailto="info@candjinnovations.com">info@candjinnovations.com</a>.</div>
-<div>Best,</div> 
+<div>&nbsp;</div>
+<div>Best,</div>
 <div>Colleen and Jeanne</div>
 </body>
 </html>
