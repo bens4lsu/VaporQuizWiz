@@ -250,7 +250,7 @@ class AssessmentController {
             throw Abort (.internalServerError, reason: "Attempt to send email without name or email address.")
         }
         
-        let distributionList = ["ben@concordbusinessservicesllc.com"]
+        async let distributionListTask = emailDistributionList(req, assessmentId: assessmentInstanceContext.id)
         let subjectContext = SubjectContext(assessmentName: assessmentInstanceContext.assessment.name)
         let reportPdfLink = reportPdfLink(aic: assessmentInstanceContext)
         let qaPdfLink = qaPdfLink(aic: assessmentInstanceContext)
@@ -258,13 +258,19 @@ class AssessmentController {
         
         async let subjectLineTask = viewToString(req, "EmailSubject", subjectContext)
         async let bodyTask = viewToString(req, "EmailBody", bodyContext)
-        let subjectLine = try await subjectLineTask
-        let body = try await bodyTask
+        
+        let (subjectLine, body, distributionList) = (try await subjectLineTask, try await bodyTask, try await distributionListTask)
         await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for recipient in distributionList {
                 let mailqEntry = MailQueue(emailAddressFrom: emailConfig.fromAddress, emailAddressTo: recipient, subject: subjectLine, body: body, fromName: emailConfig.fromName)
                 async let _ = mailqEntry.save(on: req.db(.emailDb))
             }
+        }
+    }
+    
+    private func emailDistributionList(_ req: Request, assessmentId: Int) async throws -> [String] {
+        try await AssessmentEmail.query(on: req.db).filter(\.$assessmentId == assessmentId).all().map { row in
+            row.emailAddress
         }
     }
     
