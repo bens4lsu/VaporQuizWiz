@@ -171,6 +171,16 @@ class AssessmentController {
         return Response(status: .ok, headers: HTTPHeaders([("Content-Type", "application/pdf")]), body: .init(data: pdf))
     }
     
+//    func reportPdfLink(aic: AssessmentInstanceContext) -> String {
+//        "\(baseString)/pdf/report/\(aic.assessment.aidEncryptedForUrl))/\(aic.instanceIdEncryptedForUrl)"
+//    }
+//
+//    func qaPdfLink(aic: AssessmentInstanceContext) -> String {
+//        "\(baseString)/pdf/qAndASummary/\(aic.assessment.aidEncryptedForUrl)/\(aic.instanceIdEncryptedForUrl)"
+//    }
+    
+    
+    // MARK: Private
     
     private func validAnswer(_ answer: String?) -> Int? {
         guard let answer = answer,
@@ -183,9 +193,6 @@ class AssessmentController {
         }
         return int
     }
-    
-    
-    // MARK: Private
     
     
     private func handleErrorResponse(_ req: Request, _ variables: [String: String]) async throws -> ResponseStatus {
@@ -252,8 +259,8 @@ class AssessmentController {
         
         async let distributionListTask = emailDistributionList(req, assessmentId: assessmentInstanceContext.assessment.id)
         let subjectContext = SubjectContext(assessmentName: assessmentInstanceContext.assessment.name)
-        let reportPdfLink = reportPdfLink(aic: assessmentInstanceContext)
-        let qaPdfLink = qaPdfLink(aic: assessmentInstanceContext)
+        let reportPdfLink = assessmentInstanceContext.reportLinkPdf
+        let qaPdfLink = assessmentInstanceContext.qaLinkPdf
         let bodyContext = BodyContext(takerName: name, takerEmail: email, reportLink: reportPdfLink, qaLink: qaPdfLink)
         
         async let subjectLineTask = viewToString(req, "EmailSubject", subjectContext)
@@ -279,13 +286,7 @@ class AssessmentController {
         return String(buffer: data).replacingOccurrences(of: "&amp;", with: "&")
     }
     
-    private func reportPdfLink(aic: AssessmentInstanceContext) -> String {
-        "\(baseString)/pdf/report/\(aic.assessment.aidEncryptedForUrl))/\(aic.instanceIdEncryptedForUrl)"
-    }
-    
-    private func qaPdfLink(aic: AssessmentInstanceContext) -> String {
-        "\(baseString)/pdf/qAndASummary/\(aic.assessment.aidEncryptedForUrl)/\(aic.instanceIdEncryptedForUrl)"
-    }
+
     
 
         

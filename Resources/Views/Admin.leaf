@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Configuration Page</title>
+  <META NAME="robots" CONTENT="noindex,nofollow">
+  <base href="#(base)" target="_blank">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
+  
+</head>
+<body>
+
+<div class="heading">
+    <select>
+        <option value="" selected >&nbsp;</option>
+        #for(row in assessments):
+            <option value="#(row.id)">#(row.name)</option>
+        #endfor
+    </select>
+</div>
+
+<!-- Menu down the left side -->
+<div style="float: left; width: 20%; height: 100vh; background-color: #f0f0f0;">
+  <ul style="list-style-type: none; padding: 0;">
+    <li><a href="#">Results</a></li>
+    <li><a href="#">Configure</a></li>
+    <li><a href="#">Email List</a></li>
+    <li><a href="#">Test & Deploy</a></li>
+  </ul>
+</div>
+
+<!-- Main content takes up the bulk of the page -->
+<div style="margin-left: 20%; padding: 20px;">
+  <h1>Main Content</h1>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce malesuada, velit vel tristique ultricies, purus odio laoreet arcu, ac dapibus metus tellus vel lorem. Sed hendrerit leo ut malesuada vulputate. Aenean lacinia, magna a faucibus bibendum, velit magna venenatis nisi, eu pellentesque libero sem ut augue. Nullam in hendrerit augue.</p>
+  <p>Nunc eleifend congue ultricies. Etiam euismod porta tellus, eu scelerisque ex dignissim ac. Praesent vel felis sit amet quam pulvinar facilisis. Suspendisse suscipit nulla nec purus bibendum, eu tempor ex mollis. Nam consectetur enim vel neque rhoncus, auctor malesuada urna aliquet. Duis id dolor sed turpis blandit feugiat. Sed euismod, lacus id pulvinar pharetra, orci sapien suscipit lorem, a lacinia urna purus a libero. Mauris in lorem sapien. Vestibulum convallis elit vitae tellus aliquam, sit amet laoreet dolor bibendum. Nullam efficitur dolor vitae libero facilisis, ac rutrum orci finibus. Sed tincidunt est vel quam lobortis, at convallis lorem blandit.</p>
+</div>
+
+</body>
+</html>

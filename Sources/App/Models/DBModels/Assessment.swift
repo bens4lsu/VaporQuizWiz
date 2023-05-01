@@ -10,7 +10,7 @@ import Vapor
 import Fluent
 
 
-final class Assessment: Model, Content {
+final class Assessment: Model, Content, Codable {
     static let schema = "Assessments"
     
     @ID(custom: "AssessmentID")

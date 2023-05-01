@@ -25,7 +25,7 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
     }
     
     
-
+    #if DEBUG
     app.get("pdftest") { req async throws -> Response in
         // Create document. Margins in mm, can be set individually or all at once.
         // If no margins are set, the default is 20mm.
@@ -47,6 +47,7 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
             )
         }.get()
     }
+    #endif
 }
 
 

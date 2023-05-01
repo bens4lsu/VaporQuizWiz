@@ -4,6 +4,7 @@ import Leaf
 struct WebRouteController: RouteCollection {
     
     let ac: AssessmentController
+    let adminC: AdminController
     let settings: ConfigurationSettings
     let logger: Logger
     
@@ -11,6 +12,7 @@ struct WebRouteController: RouteCollection {
         self.ac = AssessmentController(passports: passports, logger: logger, settings: settings)
         self.settings = settings
         self.logger = logger
+        self.adminC = AdminController(ac)
     }
     
     func boot(routes: RoutesBuilder) throws {
@@ -21,6 +23,7 @@ struct WebRouteController: RouteCollection {
         routes.get("pdf", "**", use: pdfLanding)
         routes.get("pdfresult", ":page", ":aid", ":instance", use: self.returnPdf )
         routes.get("pdf-footer", use: pdfFooter)
+        routes.get("x", use:admin)
     }
     
     
@@ -98,6 +101,10 @@ struct WebRouteController: RouteCollection {
             throw Abort(.badRequest, reason: "Invalid assessment or instance token on request for report")
         }
         return (aidStr, instanceStr)
+    }
+    
+    private func admin(_ req: Request) async throws -> View {
+        try await req.view.render("Admin", adminC.adminContext(req))
     }
     
     

@@ -13,16 +13,19 @@ struct APIRouteController: RouteCollection {
     let ac: AssessmentController
     let settings: ConfigurationSettings
     let logger: Logger
+    let adminC: AdminController
     
     init(passports: Passports, settings: ConfigurationSettings, logger: Logger) {
         self.ac = AssessmentController(passports: passports, logger: logger, settings: settings)
         self.settings = settings
         self.logger = logger
+        self.adminC = AdminController(ac)
     }
     
     func boot(routes: RoutesBuilder) throws {
         let api = routes.grouped("api")
         api.get(":aid", use: newInstance)
+        api.post("admin-results", use: adminResultTable)
     }
     
     private func newInstance(_ req: Request) async throws -> Response {
@@ -32,5 +35,13 @@ struct APIRouteController: RouteCollection {
             throw Abort(.badRequest, reason: "Invalid assessment token")
         }
         return try await ac.new(req, aid: aid).encodeResponse(for: req)
+    }
+    
+    private func adminResultTable(_ req: Request) async throws -> Response {
+        struct ReqAid: Decodable{
+            let aid: Int
+        }
+        let reqAid = try req.content.decode(ReqAid.self)
+        return try await adminC.assessmentResults(req, aid: reqAid.aid).encodeResponse(for: req)
     }
 }

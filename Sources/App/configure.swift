@@ -27,8 +27,8 @@ public func configure(_ app: Application) throws {
     let threeEncrypted = try BenCrypt.encode("3", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)
     let fourEncrypted = try BenCrypt.encode("4", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)
     
-    logger.debug("link for Walkaway: /\(threeEncrypted ?? "")")
-    logger.debug("link for Expansion: /\(fourEncrypted ?? "")")
+    logger.debug("link for Walkaway: /a/\(threeEncrypted ?? "")")
+    logger.debug("link for Expansion: /a/\(fourEncrypted ?? "")")
     #endif
     
     var tls = TLSConfiguration.makeClientConfiguration()

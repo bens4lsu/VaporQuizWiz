@@ -22,6 +22,22 @@ final class AssessmentInstanceContext: Content, Error {
     var instanceIdEncryptedForUrl: String {
         instanceIdEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
     }
+    
+    var reportLink: String {
+        "/report/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
+    }
+    
+    var reportLinkPdf: String {
+        "/pdf/report/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
+    }
+    
+    var qaLink: String {
+        "/qasummary/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
+    }
+    
+    var qaLinkPdf: String {
+        "/pdf/qasummary/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
+    }
 
     
     init(_ req: Request, forAssessmentId aid: Int, passports: Passports, keys: ConfigurationSettings.CryptKeys) async throws {
