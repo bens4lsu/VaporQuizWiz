@@ -23,6 +23,12 @@ public func configure(_ app: Application) throws {
     logger.logLevel = settings.loggerLogLevel
     #if DEBUG
     logger.debug("Running in debug.")
+    
+    let threeEncrypted = try BenCrypt.encode("3", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+    let fourEncrypted = try BenCrypt.encode("4", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+    
+    logger.debug("link for Walkaway: /\(threeEncrypted ?? "")")
+    logger.debug("link for Expansion: /\(fourEncrypted ?? "")")
     #endif
     
     var tls = TLSConfiguration.makeClientConfiguration()

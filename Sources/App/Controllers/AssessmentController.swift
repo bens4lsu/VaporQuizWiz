@@ -260,6 +260,8 @@ class AssessmentController {
         async let bodyTask = viewToString(req, "EmailBody", bodyContext)
         
         let (subjectLine, body, distributionList) = (try await subjectLineTask, try await bodyTask, try await distributionListTask)
+        print (subjectLine)
+        print (distributionList)
         await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for recipient in distributionList {
                 let mailqEntry = MailQueue(emailAddressFrom: emailConfig.fromAddress, emailAddressTo: recipient, subject: subjectLine, body: body, fromName: emailConfig.fromName)
