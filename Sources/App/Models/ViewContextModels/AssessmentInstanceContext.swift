@@ -28,15 +28,17 @@ final class AssessmentInstanceContext: Content, Error {
     }
     
     var reportLinkPdf: String {
-        "/pdf/report/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
+        let pdfsub = PDFPageType.report
+        return "/pdf/\(pdfsub.pathPartForHtmlVersion)/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
     }
     
     var qaLink: String {
-        "/qasummary/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
+        "/qAndASummary/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
     }
     
     var qaLinkPdf: String {
-        "/pdf/qasummary/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
+        let pdfsub = PDFPageType.qAndASummary
+        return "/pdf/\(pdfsub.pathPartForHtmlVersion)/\(assessment.aidEncryptedForUrl)/\(instanceIdEncryptedForUrl)"
     }
 
     

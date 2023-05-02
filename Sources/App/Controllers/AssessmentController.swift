@@ -153,6 +153,9 @@ class AssessmentController {
             if emailConfig.enableEmailSend {
                 async let _ = requestEmailNotifications(req, assessmentInstanceContext: assessmentInstanceContext)
             }
+            else {
+                logger.info("Skipping email send due to configuration.")
+            }
         }
         let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext, host: host)
         return .success(resultContext)
@@ -161,7 +164,7 @@ class AssessmentController {
     
     func pageToPDF(_ req: Request, pageType: PDFPageType, aidStr: String, instanceStr: String) async throws -> Response {
         let port = req.application.http.server.configuration.port
-        let htmlPage = "http://localhost:\(port)/\(pageType.pathPartForHtmlVersion)/\(aidStr.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(instanceStr)"
+        let htmlPage = "http://localhost:\(port)/\(pageType.pathPartForHtmlVersion)/\(aidStr.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(instanceStr.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)"
         let docContent = try await ResourceFileManager.dataFromSource(req, url: htmlPage)
         let page1 = Page(docContent)
         //let document = Document(size: "Letter", zoom: "1.3", top: 10, right: 10, bottom: 10, left: 10, wkArgs: wkArgs)
@@ -259,8 +262,8 @@ class AssessmentController {
         
         async let distributionListTask = emailDistributionList(req, assessmentId: assessmentInstanceContext.assessment.id)
         let subjectContext = SubjectContext(assessmentName: assessmentInstanceContext.assessment.name)
-        let reportPdfLink = assessmentInstanceContext.reportLinkPdf
-        let qaPdfLink = assessmentInstanceContext.qaLinkPdf
+        let reportPdfLink = baseString + assessmentInstanceContext.reportLinkPdf
+        let qaPdfLink = baseString + assessmentInstanceContext.qaLinkPdf
         let bodyContext = BodyContext(takerName: name, takerEmail: email, reportLink: reportPdfLink, qaLink: qaPdfLink)
         
         async let subjectLineTask = viewToString(req, "EmailSubject", subjectContext)

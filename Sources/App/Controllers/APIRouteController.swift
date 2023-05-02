@@ -38,7 +38,7 @@ struct APIRouteController: RouteCollection {
     }
     
     private func adminResultTable(_ req: Request) async throws -> Response {
-        struct ReqAid: Decodable{
+        struct ReqAid: Decodable {
             let aid: Int
         }
         let reqAid = try req.content.decode(ReqAid.self)

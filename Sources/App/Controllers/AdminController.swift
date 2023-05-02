@@ -28,7 +28,11 @@ class AdminController {
     func assessmentResults(_ req: Request, aid: Int) async throws -> AdminResultsContext {
         let _ = try sc.userAuthorized(req)
         var assessmentId: Int?
-        let instances = try await AssessmentInstance.query(on: req.db).filter(\.$dateComplete != nil).all()
+        let instances = try await AssessmentInstance.query(on: req.db)
+            .filter(\.$dateComplete != nil)
+            .filter(\.$assessmentId == aid)
+            .all()
+        
         let mylist = try await instances.asyncMap { row in
             guard let dateComplete = row.dateComplete else {
                 throw Abort (.internalServerError, reason: "Attempt to retrieve result where dateComplete is not set.")
@@ -37,11 +41,12 @@ class AdminController {
             if assessmentId == nil {
                 assessmentId = row.assessmentId
             }
-            //let assessmentContext = try await AssessmentContext(req, id: assessmentId!, passports: ac.passports, keys: ac.cryptKeys)
-            let aic = try await AssessmentInstanceContext(req, forAssessmentId: row.id!, passports: ac.passports, keys: ac.cryptKeys)
+            let aic = try await AssessmentInstanceContext(req, assessmentId: assessmentId!, instance: row.id!, passports: ac.passports, keys: ac.cryptKeys)
             let name = row.name ?? ""
             let email = row.email ?? ""
             return AdminResultContext(id: row.id!, name: name, email: email, dateComplete: dateComplete, reportLink: aic.reportLink, summaryLink: aic.qaLink, reportLinkPdf: aic.reportLinkPdf, summaryLinkPdf: aic.qaLinkPdf )
+        }.sorted {
+            $0.dateComplete > $1.dateComplete
         }
         return AdminResultsContext(mylist)
     }

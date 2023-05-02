@@ -6,36 +6,224 @@
   <base href="#(base)" target="_blank">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
+  <script src="#(base)/scripts/jquery-ui.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.jqueryui.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <!--<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.jqueryui.min.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+  <!--<link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet">-->
+  <link href="#(base)/styles/jquery-ui.min.css" rel="stylesheet">
+  <link href="#(base)/styles/jquery-ui.structure.min.css" rel="stylesheet">
+  <link href="#(base)/styles/jquery-ui.theme.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.jqueryui.min.css" rel="stylesheet">
+  <!--<link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.jqueryui.min.css" rel="stylesheet">-->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
   
+  <style>
+    body {font-family:Montserrat; font-size:11pt;}
+    
+    #heading {
+        height: 50px;
+        margin-bottom: 10px;
+    }
+    
+    #divBig {
+        position: absolute;
+        width: 100%;
+        height: auto;
+    }
+    
+    #div-main-menu {
+        float: left;
+        width: 11em;
+        background-color: #f0f0f0;
+        height:100%;
+    }
+    
+    #div-main-menu li {
+        padding-bottom: 1em;
+    }
+    
+    #content {
+        margin-left: 20em;
+    }
+  
+    #results-table_wrapper { 
+        width:75%;
+        position: relative;
+        left: 0;
+        font-size: 80%;
+        vertical-align: top;
+        display: inline-block;
+    }
+    
+    .ui-menu-item {
+    }
+
+  </style>
 </head>
 <body>
 
-<div class="heading">
-    <select>
-        <option value="" selected >&nbsp;</option>
-        #for(row in assessments):
-            <option value="#(row.id)">#(row.name)</option>
-        #endfor
-    </select>
-</div>
+    <script>
+    
+        var linkTable = {};
+        var baseUrl = "#(base)";
+        
+        function menuHtml(id) {
+            let html = `<ul class="td-context-menu" style="width:46px;">
+                <li><div>...</div>
+                    <ul>
+                        <li><div>Results</div>
+                            <ul>
+                                <li id="menu-result-html-xxx"><div>HTML</div></li>
+                                <li id="menu-result-pdf-xxx"><div>PDF</div></li>
+                            </ul>           
+                        </li>
+                        <li><div>Q & A Summary</div>
+                            <ul>
+                                <li id="menu-summary-html-xxx"><div>HTML</div></li>
+                                <li  id="menu-summary-pdf-xxx"><div>PDF</div></li>
+                            </ul>           
+                        </li>
+                        <li id="menu-crm"><div>CRM Admin</div></li>
+                    </ul>
+                </li>
+            </ul>`;
+            
+            return (html.replaceAll("xxx", id));
+        }
+            
+        
+        function resultsTable(obj) {
+            var htmlTable = '<table id="results-table"><thead><tr><th>Id</th><th>Name</th><th>Email</th><th>Completed</th><th>Actions</th></tr></thead><tbody>';
+            linkTable = {};
+            obj.results.forEach(function(result) {
+                let dt = new Date(result.dateComplete);
+                htmlTable += '<tr><td>' + result.id;
+                htmlTable += '</td><td>' + result.name;
+                htmlTable += '</td><td>' + result.email;
+                htmlTable += '</td><td>' + dt.toLocaleString();
+                htmlTable += '</td><td style="width:46px;">'+menuHtml(result.id)+'</td></tr>';
+                linkTable[result.id] = {
+                    reportLink: result.reportLink,
+                    reportLinkPdf: result.reportLinkPdf,
+                    summaryLink: result.summaryLink,
+                    summaryLinkPdf: result.summaryLinkPdf
+                }
+            });
+            htmlTable += '</tbody></table>';
+            return htmlTable;
+        }
+        
+        function getLinkFromMenuId(menuId) {
+            let idParts = menuId.split("-");
+            let node = "";
+            if (idParts[1] == "summary" && idParts[2] == "html") {
+                node = "summaryLink";
+            }
+            else if (idParts[1] == "summary" && idParts[2] == "pdf") {
+                node = "summaryLinkPdf";
+            }
+            else if (idParts[1] == "result" && idParts[2] == "html") {
+                node = "reportLink";
+            }
+            else if (idParts[1] == "result" && idParts[2] == "pdf") {
+                node = "reportLinkPdf";
+            }
+            if (node == "") {
+                return null;
+            }
+            return linkTable[idParts[3]][node];
+        }
+        
+        
+        $(document).ready(function() {
 
-<!-- Menu down the left side -->
-<div style="float: left; width: 20%; height: 100vh; background-color: #f0f0f0;">
-  <ul style="list-style-type: none; padding: 0;">
-    <li><a href="#">Results</a></li>
-    <li><a href="#">Configure</a></li>
-    <li><a href="#">Email List</a></li>
-    <li><a href="#">Test & Deploy</a></li>
-  </ul>
-</div>
+            $('#menu-results').click(function(event) {
+                event.preventDefault();
+                $('#content').html('');
+                if($('#selHeader').val() > 0) {
+                    let data = { "aid" : $('#selHeader').val() };
+                    let url = "#(base)/api/admin-results";
+                    $.ajax ({
+                        type: "POST",
+                        dataType: "json",
+                        url: url,
+                        data: data, 
+                        success: function(response) {
+                            $('#content').html(resultsTable(response));
+                            var table = $('#results-table').DataTable( {
+                                lengthChange: false,
+                                buttons: [ 'copy', 'excel', 'pdf']
+                            } );
+ 
+                            table.buttons().container()
+                                .insertBefore( '#results-table_filter' );
+                                
+                            $('.td-context-menu').menu({
+                                select: function(event, ui) {
+                                    let link = getLinkFromMenuId(event.currentTarget.id);
+                                    if (link !== null) {
+                                        window.open(link);
+                                    }
+                                }
+                            });
+                                
+                        },
+                        error: function (request, status, error) {
+                            alert(request.responseText);
+                        }
+                    });
+                }
+            });
+            
+            $("#selHeader").change(function() {
+                $('#content').html("");
+                $('#menu-results').click();
+            });
+            
+            $("#selHeader").val("3");
+            $('#menu-results').click();
+            
+        });
+        
 
-<!-- Main content takes up the bulk of the page -->
-<div style="margin-left: 20%; padding: 20px;">
-  <h1>Main Content</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce malesuada, velit vel tristique ultricies, purus odio laoreet arcu, ac dapibus metus tellus vel lorem. Sed hendrerit leo ut malesuada vulputate. Aenean lacinia, magna a faucibus bibendum, velit magna venenatis nisi, eu pellentesque libero sem ut augue. Nullam in hendrerit augue.</p>
-  <p>Nunc eleifend congue ultricies. Etiam euismod porta tellus, eu scelerisque ex dignissim ac. Praesent vel felis sit amet quam pulvinar facilisis. Suspendisse suscipit nulla nec purus bibendum, eu tempor ex mollis. Nam consectetur enim vel neque rhoncus, auctor malesuada urna aliquet. Duis id dolor sed turpis blandit feugiat. Sed euismod, lacus id pulvinar pharetra, orci sapien suscipit lorem, a lacinia urna purus a libero. Mauris in lorem sapien. Vestibulum convallis elit vitae tellus aliquam, sit amet laoreet dolor bibendum. Nullam efficitur dolor vitae libero facilisis, ac rutrum orci finibus. Sed tincidunt est vel quam lobortis, at convallis lorem blandit.</p>
-</div>
+    </script>
+
+    <div id="heading">
+        <select id="selHeader">
+            <option value="" selected >&nbsp;</option>
+            #for(row in assessments):
+                <option value="#(row.id)">#(row.name)</option>
+            #endfor
+        </select>
+    </div>
+
+    <div id="divBig">
+        <!-- Menu down the left side -->
+        <div id="div-main-menu">
+          <ul style="list-style-type: none;">
+            <li><a href="#" id="menu-results">Results</a></li>
+            <li><a href="#">Configure</a></li>
+            <li><a href="#">Email List</a></li>
+            <li><a href="#">Test & Deploy</a></li>
+          </ul>
+        </div>
+
+        <!-- Main content takes up the bulk of the page -->
+        <div id="content">
+        </div>
+    </div>    
+    
+        
+
 
 </body>
 </html>

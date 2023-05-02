@@ -19,9 +19,9 @@ struct WebRouteController: RouteCollection {
         routes.get(":aid", use: newInstance)
         routes.post("evaluation", use: processAssessment)
         routes.get("report", ":aid", ":instance", use: report)
-        routes.get("qasummary", ":aid", ":instance", use: qaSummary)
+        routes.get("qAndASummary", ":aid", ":instance", use: qaSummary)
         routes.get("pdf", "**", use: pdfLanding)
-        routes.get("pdfresult", ":page", ":aid", ":instance", use: self.returnPdf )
+        routes.get("pdfresult", ":page", ":aid", ":instance", use: returnPdf )
         routes.get("pdf-footer", use: pdfFooter)
         routes.get("x", use:admin)
     }

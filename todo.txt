@@ -1,2 +1,0 @@
-1.  Security - write encrypted aid and instanceid on page
-2.  

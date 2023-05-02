@@ -16,7 +16,7 @@ enum PDFPageType: String {
         case .report:
             return "report"
         case .qAndASummary:
-            return "qasummary"
+            return "qAndASummary"
         }
     }
 }
