@@ -27,15 +27,27 @@
 
   
   <style>
-    body {font-family:Montserrat; font-size:11pt;}
+    body {font-family:Montserrat;}
     
     #heading {
         height: 50px;
         margin-bottom: 10px;
+        font-size: 20pt;
+        position: relative;
+        height: 140px;
+    }
+    
+    #heading div img {
+        display:block;
+        margin: auto;
+    }
+    
+    #selHeader  {
+        font-family:Montserrat; font-size: 11pt;
     }
     
     #divBig {
-        position: absolute;
+        position: relative;
         width: 100%;
         height: auto;
     }
@@ -198,6 +210,7 @@
     </script>
 
     <div id="heading">
+        <div><img src="#(base)/logos/logo.png"></div>
         <select id="selHeader">
             <option value="" selected >&nbsp;</option>
             #for(row in assessments):
