@@ -27,12 +27,11 @@
 
   
   <style>
-    body {font-family:Montserrat;}
+    body {font-family:'Montserrat', sans-serif; font-size:16pt;}
     
     #heading {
         height: 50px;
         margin-bottom: 10px;
-        font-size: 20pt;
         position: relative;
         height: 140px;
     }
@@ -42,8 +41,12 @@
         margin: auto;
     }
     
-    #selHeader  {
-        font-family:Montserrat; font-size: 11pt;
+    #selHeader {
+        font-family:Montserrat; font-size: 24pt;
+    }
+    
+    #heading #selHeader-button {
+        width: 24em;
     }
     
     #divBig {
@@ -196,12 +199,31 @@
                 }
             });
             
-            $("#selHeader").change(function() {
-                $('#content').html("");
-                $('#menu-results').click();
+            
+            $('#menu-configure').click(function(event) {
+                event.preventDefault();
+                $('#content').html('');
             });
+            $('#menu-email-list').click(function(event) {
+                event.preventDefault();
+                $('#content').html('');
+            });
+            $('#menu-test').click(function(event) {
+                event.preventDefault();
+                $('#content').html('');
+            });
+
+            
+            
             
             $("#selHeader").val("3");
+            $("#selHeader").selectmenu({
+                change: function(event, ui) {
+                    console.log(ui);
+                    $('#content').html("");
+                    $('#menu-results').click();
+                }
+            });
             $('#menu-results').click();
             
         });
@@ -224,9 +246,9 @@
         <div id="div-main-menu">
           <ul style="list-style-type: none;">
             <li><a href="#" id="menu-results">Results</a></li>
-            <li><a href="#">Configure</a></li>
-            <li><a href="#">Email List</a></li>
-            <li><a href="#">Test & Deploy</a></li>
+            <li><a href="#" id="menu-configure">Configure</a></li>
+            <li><a href="#" id="menu-email-list">Email List</a></li>
+            <li><a href="#" id="menu-test">Test & Deploy</a></li>
           </ul>
         </div>
 
