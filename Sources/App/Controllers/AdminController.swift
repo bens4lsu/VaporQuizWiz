@@ -13,20 +13,19 @@ class AdminController {
     
     let ac: AssessmentController
     var assessmentList: [Assessment]?
-    let sc = SecurityController()
 
     init(_ ac: AssessmentController) {
         self.ac = ac
     }
     
     func adminContext(_ req: Request) async throws -> AdminContext {
-        let _ = try sc.userAuthorized(req)
+        let _ = try SecurityController.userAuthorized(req)
         let list = try await loadPassportList(req)
         return AdminContext(assessments: list, base: ac.baseString)
     }
     
     func assessmentResults(_ req: Request, aid: Int) async throws -> AdminResultsContext {
-        let _ = try sc.userAuthorized(req)
+        let _ = try SecurityController.userAuthorized(req)
         var assessmentId: Int?
         let instances = try await AssessmentInstance.query(on: req.db)
             .filter(\.$dateComplete != nil)

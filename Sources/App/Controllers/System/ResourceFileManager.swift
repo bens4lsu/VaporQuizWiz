@@ -41,5 +41,11 @@ class ResourceFileManager {
         }
         return returnString
     }
+    
+    
+    static func viewToString(_ req: Request, _ template: String, _ context: any Content) async throws -> String {
+        let data = try await req.view.render(template, context).get().data
+        return String(buffer: data).replacingOccurrences(of: "&amp;", with: "&")
+    }
 
 }

@@ -54,6 +54,7 @@ class ConfigurationSettings: Decodable {
     let wkhtmltopdf: Wkhtmltopdf
     let host: Host
     let email: Email
+    let resetKeyExpDuration: Int
     
     var certificateVerification: CertificateVerification {
         if database.certificateVerificationString == "noHostnameVerification" {
@@ -82,6 +83,7 @@ class ConfigurationSettings: Decodable {
             self.wkhtmltopdf = decoder.wkhtmltopdf
             self.host = decoder.host
             self.email = decoder.email
+            self.resetKeyExpDuration = decoder.resetKeyExpDuration
         }
         catch {
             print ("Could not initialize app from Config.json. \n \(error)")

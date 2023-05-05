@@ -1,0 +1,6 @@
+<html>
+<body>
+<p>We have received a password reset request for your account.  If you did not make this request, you can delete this email, and your password will remain unchanged.</p>
+<p>If you do want to change your password, follow <a href="\(#(resetLink))">this link</a>.</p>
+</body>
+</html>

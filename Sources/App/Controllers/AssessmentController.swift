@@ -266,8 +266,8 @@ class AssessmentController {
         let qaPdfLink = baseString + assessmentInstanceContext.qaLinkPdf
         let bodyContext = BodyContext(takerName: name, takerEmail: email, reportLink: reportPdfLink, qaLink: qaPdfLink)
         
-        async let subjectLineTask = viewToString(req, "EmailSubject", subjectContext)
-        async let bodyTask = viewToString(req, "EmailBody", bodyContext)
+        async let subjectLineTask = ResourceFileManager.viewToString(req, "EmailSubject", subjectContext)
+        async let bodyTask = ResourceFileManager.viewToString(req, "EmailBody", bodyContext)
         
         let (subjectLine, body, distributionList) = (try await subjectLineTask, try await bodyTask, try await distributionListTask)
         await withThrowingTaskGroup(of: Void.self) { taskGroup in
@@ -283,15 +283,4 @@ class AssessmentController {
             row.emailAddress
         }
     }
-    
-    private func viewToString(_ req: Request, _ template: String, _ context: any Content) async throws -> String {
-        let data = try await req.view.render(template, context).get().data
-        return String(buffer: data).replacingOccurrences(of: "&amp;", with: "&")
-    }
-    
-
-    
-
-        
-        
 }
