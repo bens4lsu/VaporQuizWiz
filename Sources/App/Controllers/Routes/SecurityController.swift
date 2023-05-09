@@ -228,29 +228,37 @@ extension SecurityController {
             throw Abort(.badRequest, reason: "Invalid password reset key.")
         }
         
-        
-        
         guard pw1 == pw2 else {
             throw Abort(.badRequest, reason: "Form submitted two passwords that don't match.")
         }
         
         let resetRequest: PasswordResetRequest = try await verifyKey(req, resetKey: resetKey)
   
-        #warning("bms - password enforcement")
-        // TODO:  enforce minimum password requirement (configuration?)
-        // TODO:  verify no white space.  any other invalid characrters?
+        guard pwEnforcement(pw1) else {
+            throw Abort(.badRequest, reason: "Password did not meet minimum requirements.  Password should be at least \(settings.minPWCharacters) characters and include at least one upper case letter, one lower case letter, and one special character.")
+        }
                 
         let _ = try await changePassword(req, userId: resetRequest.userId, newPassword: pw1)
         return try await req.view.render("users-password-change-success")
     }
     
-    func changePassword(_ req: Request, userId: UUID, newPassword: String) async throws -> HTTPResponseStatus {
+    private func changePassword(_ req: Request, userId: UUID, newPassword: String) async throws -> HTTPResponseStatus {
         let userMatch = try await User.query(on:req.db).filter(\.$id == userId).all()
         let user = userMatch[0]
         let passwordHash = try Bcrypt.hash(newPassword)
         user.passwordHash = passwordHash
         try await user.save(on: req.db)
         return HTTPResponseStatus.ok
+    }
+    
+    private func pwEnforcement(_ pw: String) -> Bool {
+        let uppercaseCount = pw.unicodeScalars.filter{ CharacterSet.uppercaseLetters.contains($0) }.count
+        let lowercaseCount = pw.unicodeScalars.filter{ CharacterSet.lowercaseLetters.contains($0) }.count
+        let specialCount = pw.unicodeScalars.filter{ CharacterSet.symbols.contains($0) }.count
+        return pw.count >= settings.minPWCharacters
+            && uppercaseCount > 0
+            && lowercaseCount > 0
+            && specialCount > 0
     }
 }
 

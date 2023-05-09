@@ -51,6 +51,7 @@ class AdminController {
     }
     
     private func loadPassportList(_ req: Request, forceReload: Bool = false) async throws -> [Assessment] {
+        let _ = try SecurityController.userAuthorized(req)
         if assessmentList == nil || forceReload {
             let localList = try await Assessment.query(on: req.db).all()
             assessmentList = localList.sorted{ $0.name < $1.name }
