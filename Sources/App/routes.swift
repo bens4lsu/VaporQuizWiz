@@ -6,6 +6,7 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
     
     try app.register(collection: WebRouteController(passports: passports, settings: settings, logger: logger))
     try app.register(collection: APIRouteController(passports: passports, settings: settings, logger: logger))
+    try app.register(collection: SecurityController(settings, logger))
     
     app.get { req async throws -> View in
         

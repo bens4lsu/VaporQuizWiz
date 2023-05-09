@@ -63,10 +63,16 @@ public func configure(_ app: Application) throws {
     )
     app.middleware.use(fileMiddleware)
     
+    app.middleware.use(app.sessions.middleware)
+    
     
     
     // register routes
 
     try routes(app, passports, settings, logger)
-     
+    
+    
+//    let passwordHash = try Bcrypt.hash("o1oscar")
+//    let u = User(userName: "Ben Schultz", isAdmin: true, emailAddress: "ben@concordbusinessservicesllc.com", isActive: true, passwordHash: passwordHash)
+//    u.save(on: app.db)
 }

@@ -14,12 +14,10 @@ class SecurityController: RouteCollection {
     
     let settings: ConfigurationSettings
     let logger: Logger
-    let baseUrl: String
     
-    init(_ settings: ConfigurationSettings, _ logger: Logger, baseUrl: String) {
+    init(_ settings: ConfigurationSettings, _ logger: Logger) {
         self.settings = settings
         self.logger = logger
-        self.baseUrl = baseUrl
     }
     
     
@@ -54,52 +52,60 @@ class SecurityController: RouteCollection {
     // MARK:  Methods connected to routes that return data
     
     private func login(_ req: Request) async throws -> Response {
-        struct Form: Content {
+        do {struct Form: Content {
             var email: String?
             var password: String?
         }
-        
-        let content = try req.content.decode(Form.self)
-        
-        guard let email = content.email, let password = content.password else {
-            throw Abort(.badRequest)
+            
+            let content = try req.content.decode(Form.self)
+            
+            guard let email = content.email, let password = content.password else {
+                throw Abort(.badRequest)
+            }
+            
+            guard email.count > 0, password.count > 0 else {
+                throw Abort(.badRequest)
+            }
+            
+            let userMatches = try await User.query(on: req.db).filter(\.$emailAddress == email).all()
+            
+            let user: User =  try {
+                guard userMatches.count < 2 else {
+                    throw Abort(.unauthorized, reason: "More than one user exists with that email address.")
+                }
+                
+                guard userMatches.count == 1 else {
+                    throw Abort(.unauthorized, reason: "No user exists for that email address.")
+                }
+                
+                let user = userMatches[0]
+                
+                // verify that password submitted matches
+                guard try Bcrypt.verify(password, created: user.passwordHash) else {
+                    throw Abort(.unauthorized, reason: "Could not verify password.")
+                }
+                
+                // login success
+                guard user.isActive else {
+                    throw Abort(.unauthorized, reason: "User's system access has been revoked.")
+                }
+                // figure out which repos user has permission to see, and update the session.
+                // done
+                return user
+            }()
+            
+            SessionController.setUserId(req, user.id!)
+            SessionController.setIsAdmin(req, user.isAdmin)
+            
+            return req.redirect(to: "/x")
         }
-        
-        guard email.count > 0, password.count > 0 else {
-            throw Abort(.badRequest)
+        catch {
+            struct ErrorContent: Content {
+                let error: String
+            }
+            let errorMessage = "\(error.localizedDescription)"
+            return try await req.view.render("security-error", ErrorContent(error: errorMessage)).encodeResponse(for: req)
         }
-        
-        let userMatches = try await User.query(on: req.db).filter(\.$emailAddress == email).all()
-        
-        let user: User =  try {
-            guard userMatches.count < 2 else {
-                throw Abort(.unauthorized, reason: "More than one user exists with that email address.")
-            }
-            
-            guard userMatches.count == 1 else {
-                throw Abort(.unauthorized, reason: "No user exists for that email address.")
-            }
-            
-            let user = userMatches[0]
-            
-            // verify that password submitted matches
-            guard try Bcrypt.verify(password, created: user.passwordHash) else {
-                throw Abort(.unauthorized, reason: "Could not verify password.")
-            }
-            
-            // login success
-            guard user.isActive else {
-                throw Abort(.unauthorized, reason: "User's system access has been revoked.")
-            }
-            // figure out which repos user has permission to see, and update the session.
-            // done
-            return user
-        }()
-        
-        SessionController.setUserId(req, user.id!)
-        SessionController.setIsAdmin(req, user.isAdmin)
-        
-        return req.redirect(to: "/x")
     }
     
     
@@ -111,7 +117,10 @@ class SecurityController: RouteCollection {
     }
     
     static func userAuthorized(_ req: Request) throws -> Bool {
-        return try SessionController.getUserId(req) == nil
+        guard try SessionController.getUserId(req) != nil else {
+            throw Abort (.forbidden)
+        }
+        return true
     }
 }
 
@@ -167,10 +176,11 @@ extension SecurityController {
         // TODO:  Delete expired keys
         // TODO:  Delete any older (even unexpired) keys for this user.
         
-        let resetLink = "\(baseUrl)/security/password-reset-process/\(resetKey)"
+        let resetLink = "\(settings.baseString)/security/password-reset-process/\(resetKey)"
+        logger.debug("Password reset link generated: \(resetLink)")
         let emailBodyContext = Context(resetLink: resetLink)
         let body = try await ResourceFileManager.viewToString(req, "EmailBodyPwReset", emailBodyContext)
-        let subject = try await ResourceFileManager.viewToString(req, "EmailSubjectPwReset", "")
+        let subject = try await ResourceFileManager.viewToString(req, "EmailSubjectPwReset", [String:String]())
         let mailqEntry = MailQueue(emailAddressFrom: settings.email.fromAddress, emailAddressTo: user.emailAddress, subject: subject, body: body, fromName: settings.email.fromName)
         try await mailqEntry.save(on: req.db(.emailDb))
         return req.redirect(to: "/security/check-email")
@@ -230,7 +240,7 @@ extension SecurityController {
         // TODO:  enforce minimum password requirement (configuration?)
         // TODO:  verify no white space.  any other invalid characrters?
                 
-        let changeTask = try await changePassword(req, userId: resetRequest.userId, newPassword: pw1)
+        let _ = try await changePassword(req, userId: resetRequest.userId, newPassword: pw1)
         return try await req.view.render("users-password-change-success")
     }
     

@@ -12,7 +12,7 @@ import FluentMySQLDriver
 final class User: Model, Content, Codable {
 
     
-    static let schema = "tblUsers"
+    static let schema = "Users"
     
     @ID
     var id: UUID?

@@ -69,6 +69,14 @@ class ConfigurationSettings: Decodable {
     var loggerLogLevel: Logger.Level {
         Logger.Level(rawValue: logLevel) ?? .error
     }
+    
+    var baseString: String {
+        var portStr = ":\(self.host.listenOnPort)"
+        if self.host.server != "localhost" && self.host.server != "127.0.0.1" {
+            portStr = ""
+        }
+        return  "\(self.host.proto)://\(self.host.server)\(portStr)"
+    }
 
     
     init() {

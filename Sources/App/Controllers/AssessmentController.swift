@@ -21,8 +21,8 @@ class AssessmentController {
     let logger: Logger
     let cryptKeys: ConfigurationSettings.CryptKeys
     let host: ConfigurationSettings.Host
-    let baseString: String
     let emailConfig: ConfigurationSettings.Email
+    let baseString: String
     
     var makeDocument: () -> Document
     
@@ -32,14 +32,9 @@ class AssessmentController {
         self.cryptKeys = settings.cryptKeys
         self.host = settings.host
         self.emailConfig = settings.email
+        self.baseString = settings.baseString
         
-        var portStr = ":\(settings.host.listenOnPort)"
-        if settings.host.server != "localhost" && host.server != "127.0.0.1" {
-            portStr = ""
-        }
-        let baseString = "\(settings.host.proto)://\(settings.host.server)\(portStr)"
-        self.baseString = baseString
-        let footerString = baseString + "/pdf-footer?page=[page]&topage=[topage]"   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
+        let footerString = settings.baseString + "/pdf-footer?page=[page]&topage=[topage]"   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
         let wkArgs = ["--footer-html", footerString]
         
         self.makeDocument = {

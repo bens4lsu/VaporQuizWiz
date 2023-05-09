@@ -19,7 +19,7 @@ final class PasswordResetRequest: Content, Model, Codable {
     @Field(key: "UserID")
     var userId: UUID
 
-    static let schema = "tblPasswordResetRequests"
+    static let schema = "PasswordResetRequests"
 
     private enum CodingKeys: String, CodingKey {
         case id = "ResetRequestKey",
