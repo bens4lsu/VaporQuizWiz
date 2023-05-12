@@ -55,7 +55,7 @@ class ConfigurationSettings: Decodable {
     let host: Host
     let email: Email
     let resetKeyExpDuration: Int
-    let minPWCharacters: Int
+    let pwValidationRegex: String
     
     var certificateVerification: CertificateVerification {
         if database.certificateVerificationString == "noHostnameVerification" {
@@ -93,7 +93,7 @@ class ConfigurationSettings: Decodable {
             self.host = decoder.host
             self.email = decoder.email
             self.resetKeyExpDuration = decoder.resetKeyExpDuration
-            self.minPWCharacters = decoder.minPWCharacters
+            self.pwValidationRegex = decoder.pwValidationRegex
         }
         catch {
             print ("Could not initialize app from Config.json. \n \(error)")

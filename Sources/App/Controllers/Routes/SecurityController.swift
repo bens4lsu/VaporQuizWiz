@@ -208,7 +208,7 @@ extension SecurityController {
         }
         
         let _ = try await verifyKey(req, resetKey: parameter)
-        let context = ["resetKey" : parameter]
+        let context = ["resetKey" : parameter, "regex" : settings.pwValidationRegex]
         return try await req.view.render("users-password-change-form", context)
     }
     
@@ -234,8 +234,8 @@ extension SecurityController {
         
         let resetRequest: PasswordResetRequest = try await verifyKey(req, resetKey: resetKey)
   
-        guard pwEnforcement(pw1) else {
-            throw Abort(.badRequest, reason: "Password did not meet minimum requirements.  Password should be at least \(settings.minPWCharacters) characters and include at least one upper case letter, one lower case letter, and one special character.")
+        guard pw1.matches(settings.pwValidationRegex) else {
+            throw Abort(.badRequest, reason: "Password did not meet minimum requirements.")
         }
                 
         let _ = try await changePassword(req, userId: resetRequest.userId, newPassword: pw1)
@@ -249,16 +249,6 @@ extension SecurityController {
         user.passwordHash = passwordHash
         try await user.save(on: req.db)
         return HTTPResponseStatus.ok
-    }
-    
-    private func pwEnforcement(_ pw: String) -> Bool {
-        let uppercaseCount = pw.unicodeScalars.filter{ CharacterSet.uppercaseLetters.contains($0) }.count
-        let lowercaseCount = pw.unicodeScalars.filter{ CharacterSet.lowercaseLetters.contains($0) }.count
-        let specialCount = pw.unicodeScalars.filter{ CharacterSet.symbols.contains($0) }.count
-        return pw.count >= settings.minPWCharacters
-            && uppercaseCount > 0
-            && lowercaseCount > 0
-            && specialCount > 0
     }
 }
 
