@@ -267,6 +267,7 @@
             <li><a href="#" id="menu-configure">Configure</a></li>
             <li><a href="#" id="menu-email-list">Email List</a></li>
             <li><a href="#" id="menu-test">Test & Deploy</a></li>
+            <li><a href="/security/login">Log Out</a></li>
           </ul>
         </div>
 

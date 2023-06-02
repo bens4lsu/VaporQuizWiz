@@ -36,6 +36,7 @@ class SecurityController: RouteCollection {
     
     // MARK:  Methods connected to routes that return Views
     private func renderLogin(_ req: Request) throws -> EventLoopFuture<View> {
+        SessionController.kill(req)
         return req.view.render("users-login")
     }
     
