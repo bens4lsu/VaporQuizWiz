@@ -15,6 +15,17 @@ final class AssessmentContext: Content {
         aidEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
     }
     
+    var urlForNewInstance: String {
+        let cs = ConfigurationSettings()
+        return cs.baseString + "/" + aidEncryptedForUrl
+    }
+    
+    var embedCode: String {
+        """
+        <iframe src="" style="width:100%; height:800px;display:block; margin-left:auto; margin-right:auto;" frameborder="0" scrolling="no" id="MQWcontent" name="MQWcontent"></iframe><script type="text/javascript"> function getJsonFromUrl() {    var query = location.search.substr(1); var result = {}; query.split("&").forEach(function(part) {  var item = part.split("=");  result[item[0]] = decodeURIComponent(item[1]); }); return result; } function receiveMessage(event) {   if (! isNaN(event.data)) {  var iframe = document.getElementById('MQWcontent');  iframe.style.height = iframe.height = event.data + "px"; }  document.body.scrollTop = document.documentElement.scrollTop = 0; }  if(typeof window.addEventListener != 'undefined'){  window.addEventListener('message', receiveMessage, false); } else if(typeof window.attachEvent != 'undefined') {  window.attachEvent('onmessage', receiveMessage); } var updatedUrl = "\(urlForNewInstance)"; var pageVars = getJsonFromUrl(); for (var key in pageVars) { if (pageVars.hasOwnProperty(key) && key != "aid") {  updatedUrl = updatedUrl + "&" + key + "=" + pageVars[key] } } document.getElementById('MQWcontent').src = updatedUrl;</script>
+        """
+    }
+    
     init(_ req: Request, id: Int, passports: Passports, keys: ConfigurationSettings.CryptKeys) async throws {
         let assessment = try await Assessment.find(id, on: req.db)
         

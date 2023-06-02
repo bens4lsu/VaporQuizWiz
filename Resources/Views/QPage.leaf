@@ -178,6 +178,7 @@
                 <div class="question-number">
                   #(domain.index)a
                 </div>Your #capitalized(domain.domainType) Mindset &mdash; Where are You NOW?
+                <div class="question-block-clarifying">#(domain.blurb)</div>
                 <div class="qb_error" id="error_#(domain.index)a">This question requires a response.</div>
               </div>
               <div class="ans-block ans-row-block">
@@ -267,6 +268,7 @@
                 <div class="question-number">
                   #(domain.index)b
                 </div>Your #capitalized(domain.domainType) Mindset &mdash; Where do You Want to Be — GOAL?
+                <div class="question-block-clarifying">#(domain.blurb)</div>
                 <div class="qb_error" id="error_#(domain.index)b">This question requires a response.</div>
               </div>
               <div class="ans-block ans-row-block">

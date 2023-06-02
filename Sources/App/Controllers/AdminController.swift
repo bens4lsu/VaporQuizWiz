@@ -10,7 +10,7 @@ import Vapor
 import Fluent
 
 class AdminController {
-    
+     
     let ac: AssessmentController
     var assessmentList: [Assessment]?
 
@@ -48,6 +48,13 @@ class AdminController {
             $0.dateComplete > $1.dateComplete
         }
         return AdminResultsContext(mylist)
+    }
+    
+    func assessmentTest(_ req: Request, aid: Int) async throws -> [String: String] {
+        
+        let _ = try SecurityController.userAuthorized(req)
+        let context = try await AssessmentContext(req, id: aid, passports: ac.passports, keys: ac.cryptKeys)
+        return ["url": context.urlForNewInstance, "embedCode": context.embedCode]
     }
     
     private func loadPassportList(_ req: Request, forceReload: Bool = false) async throws -> [Assessment] {

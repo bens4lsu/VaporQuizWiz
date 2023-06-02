@@ -26,6 +26,7 @@ struct APIRouteController: RouteCollection {
         let api = routes.grouped("api")
         api.get(":aid", use: newInstance)
         api.post("admin-results", use: adminResultTable)
+        api.post("admin-test", use: adminTest)
     }
     
     private func newInstance(_ req: Request) async throws -> Response {
@@ -43,5 +44,13 @@ struct APIRouteController: RouteCollection {
         }
         let reqAid = try req.content.decode(ReqAid.self)
         return try await adminC.assessmentResults(req, aid: reqAid.aid).encodeResponse(for: req)
+    }
+    
+    private func adminTest(_ req: Request) async throws -> Response {
+        struct ReqAid: Decodable {
+            let aid: Int
+        }
+        let reqAid = try req.content.decode(ReqAid.self)
+        return try await adminC.assessmentTest(req, aid: reqAid.aid).encodeResponse(for: req)
     }
 }
