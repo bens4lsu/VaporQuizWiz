@@ -2,7 +2,7 @@
 <body>
 <div>Dear Advisor,</div>
 <div>&nbsp;</div>
-<div>This automatic, system-generated message lets you know that someone has completed your assessment. You can access the PDF of the respondent's report <a href="#(reportLink)">here</a>.</div>
+<div>Someone has completed #(assessmentName). You can access the PDF of the respondent's report <a href="#(reportLink)">here</a>.</div>
 <div>&nbsp;</div>
 <div>To print it, just use your browser functionality to download the PDF of the report.</div>
 <div>&nbsp;</div>
