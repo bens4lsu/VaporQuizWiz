@@ -145,6 +145,7 @@
                 }
                 else {
                     $('#qb_error_cs').css('display', 'block');
+                    sendFrameResizeRequest();
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 }
             });
