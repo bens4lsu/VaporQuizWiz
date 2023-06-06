@@ -62,6 +62,7 @@
             $('.demographic-question').css('display', 'none');
             
             $("#progressbar").progressbar("value",22 * (pageComplete + 1));
+            sendFrameResizeRequest();
             window.scrollTo({top: 0, behavior: 'smooth'});
                    
         }

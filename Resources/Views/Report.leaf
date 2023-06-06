@@ -92,15 +92,15 @@
             return height;
         }
                    
-            function sendFrameResizeRequest() {
+        function sendFrameResizeRequest() {
             var height;
             height = getFrameHeight();
             parent.postMessage (height, "*");
         }
                         
-                $(window).on('load', function ()  {
-                    // window.load fires after document.ready.  document.ready is after full DOM is loaded
-                    // but window.loat waits until any graphics and frames are drawn as well.
+        $(window).on('load', function ()  {
+            // window.load fires after document.ready.  document.ready is after full DOM is loaded
+            // but window.loat waits until any graphics and frames are drawn as well.
                         
             $(window).resize(function(){
                 sendFrameResizeRequest();
