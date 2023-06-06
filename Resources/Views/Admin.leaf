@@ -158,6 +158,17 @@
             return linkTable[idParts[3]][node];
         }
         
+        function makeTableMenus() {
+            $('.td-context-menu').menu({
+                select: function(event, ui) {
+                    let link = getLinkFromMenuId(event.currentTarget.id);
+                    if (link !== null) {
+                        window.open(link);
+                    }
+                }
+            });
+        }
+        
         
         $(document).ready(function() {
 
@@ -178,18 +189,14 @@
                                 lengthChange: false,
                                 buttons: [ 'copy', 'excel', 'pdf']
                             } );
- 
+                            
                             table.buttons().container()
                                 .insertBefore( '#results-table_filter' );
                                 
-                            $('.td-context-menu').menu({
-                                select: function(event, ui) {
-                                    let link = getLinkFromMenuId(event.currentTarget.id);
-                                    if (link !== null) {
-                                        window.open(link);
-                                    }
-                                }
+                            table.on('draw', function() {
+                                makeTableMenus();
                             });
+                            makeTableMenus();
                                 
                         },
                         error: function (request, status, error) {
