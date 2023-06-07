@@ -194,9 +194,9 @@
             
           </tbody>
         </table>
-        <div id="divname">
+        <!--<div id="divname">
           Name: #(takerName)
-        </div>
+        </div>-->
       </div>
       <div class="container">
         <div class="footer-block">
