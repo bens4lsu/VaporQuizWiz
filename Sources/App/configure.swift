@@ -16,14 +16,10 @@ public func configure(_ app: Application) throws {
     
     let settings = ConfigurationSettings()
     
-    app.http.server.configuration.port = settings.host.listenOnPort
-
-    
     var logger = Logger(label: "logger")
     logger.logLevel = settings.loggerLogLevel
     #if DEBUG
     logger.debug("Running in debug.")
-    
     let threeEncrypted = try BenCrypt.encode("3", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)
     let fourEncrypted = try BenCrypt.encode("4", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)
     
@@ -31,6 +27,10 @@ public func configure(_ app: Application) throws {
     logger.debug("link for Expansion: /\(fourEncrypted ?? "")")
     #endif
     
+    let assessmentController = AssessmentController(passports: passports, logger: logger, settings: settings)
+    let adminController = AdminController(assessmentController)
+    
+    app.http.server.configuration.port = settings.host.listenOnPort
     var tls = TLSConfiguration.makeClientConfiguration()
     tls.certificateVerification = settings.certificateVerification
     
@@ -69,7 +69,7 @@ public func configure(_ app: Application) throws {
     
     // register routes
 
-    try routes(app, passports, settings, logger)
+    try routes(app, adminController)
     
     
 //    let passwordHash = try Bcrypt.hash("o1oscar")

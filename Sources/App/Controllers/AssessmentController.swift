@@ -19,20 +19,18 @@ class AssessmentController {
     
     let passports: Passports
     let logger: Logger
-    let cryptKeys: ConfigurationSettings.CryptKeys
-    let host: ConfigurationSettings.Host
-    let emailConfig: ConfigurationSettings.Email
-    let baseString: String
+    let settings: ConfigurationSettings
+    var cryptKeys: ConfigurationSettings.CryptKeys { settings.cryptKeys }
+    var host: ConfigurationSettings.Host { settings.host }
+    var emailConfig: ConfigurationSettings.Email { settings.email }
+    var baseString: String { settings.baseString }
     
     var makeDocument: () -> Document
     
     init(passports: Passports, logger: Logger, settings: ConfigurationSettings) {
         self.passports = passports
         self.logger = logger
-        self.cryptKeys = settings.cryptKeys
-        self.host = settings.host
-        self.emailConfig = settings.email
-        self.baseString = settings.baseString
+        self.settings = settings
         
         let footerString = settings.baseString + "/pdf-footer?page=[page]&topage=[topage]"   // the wkhtmltopdf program replaces [page] and [topage] with the correct numbers.
         let wkArgs = ["--footer-html", footerString]

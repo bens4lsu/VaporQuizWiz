@@ -3,16 +3,14 @@ import Leaf
 
 struct WebRouteController: RouteCollection {
     
-    let ac: AssessmentController
     let adminC: AdminController
-    let settings: ConfigurationSettings
-    let logger: Logger
+    var ac: AssessmentController { adminC.ac }
+    var settings: ConfigurationSettings { adminC.ac.settings }
+    var logger: Logger { adminC.ac.logger }
+
     
-    init(passports: Passports, settings: ConfigurationSettings, logger: Logger) {
-        self.ac = AssessmentController(passports: passports, logger: logger, settings: settings)
-        self.settings = settings
-        self.logger = logger
-        self.adminC = AdminController(ac)
+    init(adminController: AdminController) {
+        self.adminC = adminController
     }
     
     func boot(routes: RoutesBuilder) throws {

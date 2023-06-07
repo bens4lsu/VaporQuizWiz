@@ -29,6 +29,13 @@ final class Assessment: Model, Content, Codable {
     var companyContactInfo: String
 
     init() { }
+    
+    init(name: String) {
+        self.name = name
+        self.disclosureText = ""
+        self.logoFileName = ""
+        self.companyContactInfo = ""
+    }
 
 }
 

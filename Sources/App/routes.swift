@@ -2,11 +2,11 @@ import Fluent
 import Vapor
 import wkhtmltopdf
 
-func routes(_ app: Application, _ passports: Passports, _ settings: ConfigurationSettings, _ logger: Logger) throws {
+func routes(_ app: Application, _ adminController: AdminController) throws {
     
-    try app.register(collection: WebRouteController(passports: passports, settings: settings, logger: logger))
-    try app.register(collection: APIRouteController(passports: passports, settings: settings, logger: logger))
-    try app.register(collection: SecurityController(settings, logger))
+    try app.register(collection: WebRouteController(adminController: adminController))
+    try app.register(collection: APIRouteController(adminController: adminController))
+    try app.register(collection: SecurityController(adminController.ac.settings, adminController.ac.logger))
     
     app.get { req async throws -> View in
         
@@ -16,9 +16,9 @@ func routes(_ app: Application, _ passports: Passports, _ settings: Configuratio
             let oneSeventyTwoEncoded: String
         }
         
-        let oneEncoded = try BenCrypt.encode("1", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-        let twoEncoded = try BenCrypt.encode("2", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-        let oneSeventyTwoEncoded = try BenCrypt.encode("172", keys: settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        let oneEncoded = try BenCrypt.encode("1", keys: adminController.ac.settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        let twoEncoded = try BenCrypt.encode("2", keys: adminController.ac.settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        let oneSeventyTwoEncoded = try BenCrypt.encode("172", keys: adminController.ac.settings.cryptKeys).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         
         let context = Context(oneEncoded: oneEncoded, twoEncoded: twoEncoded, oneSeventyTwoEncoded: oneSeventyTwoEncoded)
         return try await req.view.render("message", context)

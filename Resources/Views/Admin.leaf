@@ -27,7 +27,7 @@
 
   
   <style>
-    body {font-family:'Montserrat', sans-serif; font-size:16pt;}
+    body, input, textarea {font-family:'Montserrat', sans-serif; font-size:16pt;}
     
     #heading {
         height: 50px;
@@ -80,6 +80,24 @@
     }
     
     .ui-menu-item {
+    }
+    
+    .divDlgButtons {
+        padding-top:30px;
+    }
+    
+    .ui-dialog-titlebar-close { display: none; }
+    
+    .ui-widget.ui-widget-content {
+        border: 2px solid #333;
+        border-radius: 8px;
+    }
+    
+    label {
+        color: #888;
+        display: block;
+        padding-bottom: 0.5em;
+        padding-top: 1.5em;
     }
 
   </style>
@@ -170,6 +188,69 @@
         }
         
         
+        function configureScreen() {
+            if($('#selHeader').val() > 0) {
+                let data = { "aid" : $('#selHeader').val() };
+                let url = "#(base)/api/admin-get-passport-config";
+                $.ajax ({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    data: data, 
+                    success: function(response) {
+                        var configHtml = `
+                            <div id="divConfigure">
+                                <div>
+                                    <label for="inpLogoFileName">Logo File Name:</label>
+                                    <input type="text" id="inpLogoFileName" name="inpLogoFileName" style="width: 480px;" value="${response.logoFileName}"> 
+                                </div><div>
+                                    <label for="taDisclosureText">Disclosure Text:</label>
+                                    <textarea id="taDiscosureText" name="taDisclosureText" style="width:480px; height: 480px;">${response.disclosureText}</textarea>
+                                </div><div>
+                                    <label for="taConactInfo">Contact Info:</label>
+                                    <textarea id="taContactInfo" name="taContactInfo" style="width:480px; height: 480px;">${response.companyContactInfo}</textarea>
+                                </div>
+                                <div class="divDlgButtons">
+                                    <button id="btnSaveConfig">Save</button>
+                                </div>
+                            </div>
+                        `;
+                        $('#content').html(configHtml);
+                        $('#btnSaveConfig').button();
+                        $('#btnSaveConfig').click(function() {
+                            saveConfig();
+                        });
+                    },
+                    error: function (request, status, error) {
+                        alert(request.responseText);
+                    }
+                });
+            }
+        }
+        
+        function saveConfig() {
+            let data = { "aid" : $('#selHeader').val(),
+                "disclosureText" : $('#taDiscosureText').val(),
+                "companyContactInfo" : $('#taContactInfo').val(),
+                "logoFileName" : $('#inpLogoFileName').val()
+            };
+            let url = "#(base)/api/admin-save-passport-config";
+            console.log(data)
+            $.ajax ({
+                type: "POST",
+                dataType: "json",
+                url: url,
+                data: data, 
+                success: function(response) {
+                
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+        }
+        
+        
         $(document).ready(function() {
 
             $('#menu-results').click(function(event) {
@@ -210,6 +291,7 @@
             $('#menu-configure').click(function(event) {
                 event.preventDefault();
                 $('#content').html('');
+                configureScreen();
             });
             $('#menu-email-list').click(function(event) {
                 event.preventDefault();
@@ -226,29 +308,75 @@
                     url: url,
                     data: data, 
                     success: function(response) {
-                        console.log(response);
                         var htmlTest = "<div><a href=\"" + response.url + "\">Test assessment in a new window</a></div><div style=\"margin-top: 2em;\">Embed code:</div><div><textarea style=\"width: 75%; height: 8em;\">" + response.embedCode + "</textarea></div>";
                         $('#content').html(htmlTest);
                     },
                     error: function (request, status, error) {
                         alert(request.responseText);
                     }
-                });
-                        
-                
+                });  
+            });
+            
+            $('#menu-logout').click(function(event){
+                event.preventDefault();
+                window.parent.location.href="/security/login";
             });
 
+            $("#btnAddNew").button();
+            $("#btnAddNew").on("click", function() {
+                $("#dlgAddNew").dialog("open");
+            });
             
             
+            $("#dlgAddNew").dialog({
+                autoOpen: false,
+                modal: true,
+                title: "Create New Passport",
+                width: "600px"
+              });
+              
+            $("#btnNewPassportSubmit").button();
+            $("#btnNewPassportSubmit").click(function(event) {
+                event.preventDefault();
+                var name = $("#newPassportName").val();
+                if (!(name.toLowerCase().includes("walkaway") || name.toLowerCase().includes("expansion"))) {
+                    alert ("Error:  Name of passport must include \"Walkaway\" or \"Expansion\" so that the system knows which domains to present.");
+                 } else {
+                     $.ajax ({
+                         type: "POST",
+                         dataType: "json",
+                         url: "#(base)/api/admin-new-passport",
+                         data: { "newPassportName" : name },
+                         success: function(response) {
+                            console.log(response);
+                            $('#selHeader').append($('<option>', {value: response.id, text: name, selected: "selected"}));
+                            $('#selHeader').selectmenu("refresh");
+                            $('#selHeader').val(response.id).change();
+                            $('#dlgAddNew').dialog("close");
+                            $('#menu-configure').click();
+                         },
+                         error: function(request, status, error) {
+                             alert(request.responseText);
+                         }
+                     });
+                 }
+            });
+            
+            $("#btnNewPassportCancel").button();
+            $("#btnNewPassportCancel").click(function(event) {
+                event.preventDefault();
+                $('#dlgAddNew').dialog("close");
+            });
+                
             
             $("#selHeader").val("3");
             $("#selHeader").selectmenu({
                 change: function(event, ui) {
-                    console.log(ui);
                     $('#content').html("");
                     $('#menu-results').click();
                 }
             });
+            
             $('#menu-results').click();
             
         });
@@ -264,7 +392,9 @@
                 <option value="#(row.id)">#(row.name)</option>
             #endfor
         </select>
+        <button id="btnAddNew">Add New</button>
     </div>
+    
 
     <div id="divBig">
         <!-- Menu down the left side -->
@@ -274,14 +404,25 @@
             <li><a href="#" id="menu-configure">Configure</a></li>
             <li><a href="#" id="menu-email-list">Email List</a></li>
             <li><a href="#" id="menu-test">Test & Deploy</a></li>
-            <li><a href="/security/login">Log Out</a></li>
+            <li><a href="#" id="menu-logout">Log Out</a></li>
           </ul>
         </div>
 
         <!-- Main content takes up the bulk of the page -->
         <div id="content">
         </div>
-    </div>    
+    </div>
+    
+    <div id="dlgAddNew" class="dlg">
+        <form>
+            <label for="newPassportName">New Passport Name:</label>
+            <input type="text" id="newPassportName" name="newPassportName" style="width: 480px;">
+            <div class="divDlgButtons">
+                <button id="btnNewPassportSubmit">Submit</button>
+                <button id="btnNewPassportCancel">Cancel</button>
+            </div>
+        </form>
+    </div>
     
         
 
