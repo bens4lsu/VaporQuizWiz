@@ -30,7 +30,7 @@ enum PassportType: String, Codable {
     }
 }
 
-enum PassportDomainType: String, Codable {
+enum PassportDomainType: String, Codable, CaseIterable {
     case readiness
     case foundation
     case resource
