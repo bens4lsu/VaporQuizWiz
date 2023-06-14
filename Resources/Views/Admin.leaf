@@ -67,8 +67,35 @@
     }
     
     #content {
-        margin-left: 20em;
+        margin-left: 12em;
     }
+  
+    #passportBox {
+        background-color: #234da0;
+        font-weight: bold;
+        margin-left: 12em;;
+        margin-bottom: 8px;
+        padding: 5px;
+        height: 30px;
+        
+    }
+    
+    #passportBox div {
+        display: inline-block;
+        color: white;
+    }
+    
+    #passportBox-id {
+        padding-right: 1em;
+        padding-left: 12px;
+        border-right: 2px solid white;
+    }
+    
+    #passportBox-name {
+        padding-left: 1em;
+    }
+    
+    
   
     #results-table_wrapper { 
         width:75%;
@@ -369,13 +396,17 @@
             });
                 
             
-            $("#selHeader").val("3");
             $("#selHeader").selectmenu({
                 change: function(event, ui) {
                     $('#content').html("");
                     $('#menu-results').click();
+                    $('#passportBox-id').text($("#selHeader").val());
+                    $('#passportBox-name').text($("#selHeader option:selected").text());
+                    
                 }
             });
+            //$("#selHeader").val("3").trigger('change');
+            
             
             $('#menu-results').click();
             
@@ -408,9 +439,14 @@
           </ul>
         </div>
 
-        <!-- Main content takes up the bulk of the page -->
-        <div id="content">
+        
+        <div id="passportBox">
+                <div id="passportBox-id"></div>
+                <div id="passportBox-name"></div>
         </div>
+        <!-- Main content takes up the bulk of the page -->
+        <div id="content"></div>
+        
     </div>
     
     <div id="dlgAddNew" class="dlg">
