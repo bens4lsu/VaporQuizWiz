@@ -39,7 +39,6 @@ struct WebRouteController: RouteCollection {
     private func report(_ req: Request) async throws -> View {
         let (aidStr, instanceStr) = try aidAndInstance(req)
         let context = try await ac.reportContext(req, aidStr: aidStr, instanceStr: instanceStr)
-        print (context)
         return try await req.view.render("Report", context)
     }
     

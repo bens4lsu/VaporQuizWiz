@@ -20,16 +20,20 @@ class AssessmentInstanceDetailContext: Codable {
     let labels: [String]
 
     
-    init(order: Int, domain: PassportDomain, now: Int, goal: Int) {
+    init(app: Application, aid: Int, order: Int, domain: PassportDomain, now: Int, goal: Int) {
         self.order = order
         self.domainType = domain.domainType
         self.score = Self.score(now: now, goal: goal)
-        self.result = Self.result(now: now)
-        self.resultParagraph = domain.resultParagraphs[result]!
+        let result = Self.result(now: now)
+        self.result = result
         self.now = now
         self.goal = goal
         self.blurb = domain.blurb
         self.labels = domain.labels
+        
+        let customOutput = CustomOutput(app, aid: aid)
+        self.resultParagraph = customOutput.domains[domain.domainType]?[result] ?? domain.resultParagraphs[result]!
+        
     }
     
     

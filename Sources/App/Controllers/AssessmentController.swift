@@ -69,7 +69,7 @@ class AssessmentController {
             throw Abort (.badRequest, reason: "Invalid assessment ID or instance ID token passed in request to retrieve report")
         }
         
-        let assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(withDetails: [], host: host)
+        let assessmentInstanceReportContext = try await existingContext(req, aid: aid, instance: instance).reportContext(req, withDetails: [], host: host)
         var assessmentInstanceDetails = [AssessmentInstanceDetailContext]()
         
         
@@ -79,7 +79,8 @@ class AssessmentController {
         
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for domain in passport.domains {
-                async let context = try getResponseRow(req, assessmentInstanceId: instance, domainType: domain.domainType)?.context(passportModel: passport)
+                async let context = try getResponseRow(req, assessmentInstanceId: instance, domainType: domain.domainType)?
+                    .context(app: req.application, passportModel: passport)
                 if let addme = try await context {
                     assessmentInstanceDetails.append(addme)
                 }
@@ -130,7 +131,7 @@ class AssessmentController {
             let aiResult = AssessmentInstanceDetail(assessmentId: aid, assessmentInstanceId: instance, passportDomainType: passportDomain.domainType, now: ansNow, goal: ansGoal)
             resultRowsToUpdate.append(aiResult)
             
-            let resultRowContext = AssessmentInstanceDetailContext(order: i, domain: passportDomain, now: ansNow, goal: ansGoal)
+            let resultRowContext = AssessmentInstanceDetailContext(app: req.application, aid: aid, order: i, domain: passportDomain, now: ansNow, goal: ansGoal)
             resultRowsContext.append(resultRowContext)
         }
         
@@ -150,7 +151,7 @@ class AssessmentController {
                 logger.info("Skipping email send due to configuration.")
             }
         }
-        let resultContext = try assessmentInstanceContext.reportContext(withDetails: resultRowsContext, host: host)
+        let resultContext = try assessmentInstanceContext.reportContext(req, withDetails: resultRowsContext, host: host)
         return .success(resultContext)
     }
     

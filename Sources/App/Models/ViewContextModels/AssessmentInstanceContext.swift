@@ -18,7 +18,6 @@ final class AssessmentInstanceContext: Content, Error {
     var email: String?
     var showBossErrorMessage: Bool = false
     var instanceIdEncrypted: String
-    var customOutput: CustomOutput
     
     var instanceIdEncryptedForUrl: String {
         instanceIdEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
@@ -57,7 +56,6 @@ final class AssessmentInstanceContext: Content, Error {
         //self.pageComplete = 0
         self.dateComplete = nil
         self.instanceIdEncrypted = try BenCrypt.encode(String(id), keys: keys)
-        self.customOutput = CustomOutput(req.application, aid: aid)
     }
     
     init(_ req: Request, assessmentId aid: Int, instance: Int, passports: Passports, keys: ConfigurationSettings.CryptKeys) async throws {
@@ -72,14 +70,13 @@ final class AssessmentInstanceContext: Content, Error {
         self.name = ai.name
         self.email = ai.email
         self.instanceIdEncrypted = try BenCrypt.encode(String(id), keys: keys)
-        self.customOutput = CustomOutput(req.application, aid: aid)
     }
     
-    func reportContext(withDetails details: [AssessmentInstanceDetailContext], host: ConfigurationSettings.Host) throws -> AssessmentInstanceReportContext {
+    func reportContext(_ req: Request, withDetails details: [AssessmentInstanceDetailContext], host: ConfigurationSettings.Host) throws -> AssessmentInstanceReportContext {
         guard let name = self.name else {
             throw Abort (.internalServerError, reason: "Attempt to generate a report context before the assessment taker's name is stored.")
         }
         
-        return AssessmentInstanceReportContext(id: self.id, assessment: self.assessment, details: details, takerName: name, takerEmail: email ?? "", host: host)
+        return AssessmentInstanceReportContext(app: req.application, id: self.id, assessment: self.assessment, details: details, takerName: name, takerEmail: email ?? "", host: host)
     }
 }

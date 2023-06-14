@@ -8,7 +8,7 @@
 import Foundation
 import Vapor
 
-class CustomOutput: Codable {
+struct CustomOutput: Codable {
     let domains: [PassportDomainType: [PassportDomainResult: String]]
     let overall: [PassportDomainResult: String]
     

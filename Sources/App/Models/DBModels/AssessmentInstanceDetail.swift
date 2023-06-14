@@ -34,11 +34,11 @@ final class AssessmentInstanceDetail: Model, Content {
         self.goal = goal
     }
     
-    func context(passportModel: PassportModel) throws -> AssessmentInstanceDetailContext {
+    func context(app: Application, passportModel: PassportModel) throws -> AssessmentInstanceDetailContext {
         guard let passportDomain = passportModel.domains.first (where: { $0.domainType == self.passportDomainType }) else {
             throw Abort (.internalServerError, reason: "Domain not found in passport model.")
         }
         
-        return AssessmentInstanceDetailContext (order: passportDomain.index, domain: passportDomain, now: self.now, goal: self.goal)
+        return AssessmentInstanceDetailContext (app: app, aid: assessmentId, order: passportDomain.index, domain: passportDomain, now: self.now, goal: self.goal)
     }
 }

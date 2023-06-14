@@ -24,6 +24,7 @@ final class AssessmentInstanceReportContext: Content, Codable {
     let disclosureText: String
     let takerEmail: String
     let host: ConfigurationSettings.Host
+
     
     init(id: Int, assessment: AssessmentContext, takerName: String, takerEmail: String, host: ConfigurationSettings.Host) {
         self.id = id
@@ -44,12 +45,14 @@ final class AssessmentInstanceReportContext: Content, Codable {
         self.host = ConfigurationSettings.Host(listenOnPort: port, proto: host.proto, server: host.server)
     }
     
-    convenience init(id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String, takerEmail: String, host: ConfigurationSettings.Host) {
+    convenience init(app: Application, id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String, takerEmail: String, host: ConfigurationSettings.Host) {
         self.init(id: id, assessment: assessment, takerName: takerName, takerEmail: takerEmail, host: host)
         self.domainDetails = details
         self.overallDistance = Self.overallDistance(basedOn: details)
         self.overallResult = Self.overallResult(basedOn: details)
-        self.overallParagraph = assessment.passportModel.overallParagraphs[self.overallResult!]!
+        
+        let customOutput = CustomOutput(app, aid: assessment.id)
+        self.overallParagraph = customOutput.overall[self.overallResult!] ?? assessment.passportModel.overallParagraphs[self.overallResult!]!
         
     }
     
