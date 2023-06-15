@@ -162,7 +162,8 @@
     &nbsp;
   </div><!-- Page content below this point ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
   
-  <div class="banded-survey-header" style="padding-top:70px;">
+  <div class="banded-survey-header">
+    #unsafeHTML(assessment.aboveTitle)
     <span>Your #capitalized(assessment.passportModel.passportType) Passport®</span>
   </div>
   
@@ -171,7 +172,7 @@
       <div class="qb_error" id="qb_error_cs" style="display:none;">There were problems with some of the answers that were submitted.  Please correct the problems indicated below and resubmit.</div>
       <form method="post" action="evaluation" name="quizform" id="quizform">
         
-        #unsafeHTML(assessment.passportModel.intro)
+        #unsafeHTML(assessment.introText)
 
         #for(domain in assessment.passportModel.domains):
         

@@ -37,10 +37,6 @@ html body textarea {
 
 
 
-	
-
-
-
 .main {
 	background: url(../wp-content/themes/theme891/images/menu-bg.gif) repeat-x 0 152px; /*width:expression(((document.documentElement.clientWidth || document.body.clientWidth) < 980)? "960px" : "100%"); min-width:980px;*/
 }

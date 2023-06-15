@@ -94,7 +94,7 @@ final class PassportModel: Content, Codable {
             .sorted()
         
         let filename = "intro-\(passportType.rawValue).htm"
-        self.intro = try ResourceFileManager.readFile(filename, inPath: "", app: app)
+        self.intro = try ResourceFileManager.readFile(filename, inPath: "SurveyIntros", app: app)
         
         var resultParagraphs = [PassportDomainResult : String]()
         for resultType in PassportDomainResult.allCases {

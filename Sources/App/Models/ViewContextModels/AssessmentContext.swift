@@ -10,6 +10,8 @@ final class AssessmentContext: Content {
     let logoFileName: String
     let companyContactInfo: String
     let aidEncrypted: String
+    let introText: String
+    let aboveTitle: String
     
     var aidEncryptedForUrl: String {
         aidEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
@@ -61,6 +63,13 @@ final class AssessmentContext: Content {
         }
         
         self.aidEncrypted = try BenCrypt.encode(String(id), keys: keys)
+        
+        let filename = "intro-\(passportModel.passportType.rawValue).htm"
+        let path = "SurveyIntros/\(id)"
+        let customIntroText = try? ResourceFileManager.readFile(filename, inPath: path, app: req.application)
+        self.introText = customIntroText ?? passportModel.intro
+
+        self.aboveTitle = (try? ResourceFileManager.readFile("above-title.htm", inPath: path, app: req.application)) ?? ""
     }
     
     

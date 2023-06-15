@@ -433,9 +433,9 @@ thead {
 }
 
 .banded-survey-header {
-  position: absolute;
+  /*position: absolute;
   top: 0;
-  left: 0;
+  left: 0;*/
   z-index: 999;
   width: 100%;
   text-align:center;
@@ -452,10 +452,11 @@ thead {
 
 .banded-survey-header img {
     height:99px;
+    margin-bottom: 29px;
 }
 
 #quizform {
-    margin-top: 130px;    
+/*    margin-top: 130px;    */
     clear: both;
 }
 
