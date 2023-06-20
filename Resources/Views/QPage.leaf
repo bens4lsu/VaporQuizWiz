@@ -181,7 +181,7 @@
                 <div class="question-number">
                   #(domain.index)a
                 </div>Your #capitalized(domain.domainType) Mindset &mdash; Where are You NOW?
-                <div class="question-block-clarifying">#(domain.blurb)</div>
+                <div class="question-block-clarifying">#unsafeHTML(domain.blurb)</div>
                 <div class="qb_error" id="error_#(domain.index)a">This question requires a response.</div>
               </div>
               <div class="ans-block ans-row-block">
@@ -357,12 +357,27 @@
             </div>
         #endfor
         
-        
+        #for(question in assessment.additionalQuestions):
+            <div class="col-md form_element qb_question demographic-question" id="qb_question_9">
+              <div class="element_header ui-widget-header">
+                <div class="question_number">
+                  #(question.questionNumber)
+                </div>
+                <div class="question_text">
+                  #(question.label)
+                  <div class="qb_error" id="err_#(question.id)">#(question.errorMessage)</div>
+                </div>
+              </div>
+              <div class="form-group qb_answer ui-widget">
+                <input type="text" name="#(question.id)" id="#(question.id)" class="qb_textinput form_control" value="" placeholder="">
+              </div><!-- ends div class="form-group qb_answer" -->
+            </div>
+        #endfor
         
         <div class="col-md form_element qb_question demographic-question" id="qb_question_9">
           <div class="element_header ui-widget-header">
             <div class="question_number">
-              9.
+              #(assessment.nameQuestionNumber).
             </div>
             <div class="question_text">
               Name
@@ -376,7 +391,7 @@
         <div class="col-md form_element qb_question demographic-question" id="qb_question_10">
           <div class="element_header ui-widget-header">
             <div class="question_number">
-              10.
+              #(assessment.emailQuestionNumber).
             </div>
             <div class="question_text">
               Email Address

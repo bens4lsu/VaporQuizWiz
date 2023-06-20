@@ -8,6 +8,7 @@
 import Foundation
 import Vapor
 import wkhtmltopdf
+import Files
 
 
 class ResourceFileManager {
@@ -46,6 +47,28 @@ class ResourceFileManager {
     static func viewToString(_ req: Request, _ template: String, _ context: any Content) async throws -> String {
         let data = try await req.view.render(template, context).get().data
         return String(buffer: data).replacingOccurrences(of: "&amp;", with: "&")
+    }
+    
+    static func customQuestionsFrom(app: Application, folderPath: String) throws -> [CustomQuestion] {
+        let path = app.directory.resourcesDirectory.appending(folderPath)
+        var customQuestions = [CustomQuestion]()
+        for file in try Folder(path: path).files {
+            let fileContents = try file.readAsString()
+            let lines = fileContents.split(separator: "\n")
+            guard lines.count == 2 || lines.count == 4 else {
+                break
+            }
+            guard let questionNumber = Int(lines[0]) else {
+                break
+            }
+            if lines.count == 2 {
+                customQuestions.append(CustomQuestion(id: file.nameExcludingExtension, questionNumber: questionNumber, label: String(lines[1])))
+            }
+            else if lines.count >= 4 {
+                customQuestions.append(CustomQuestion(id: file.nameExcludingExtension, questionNumber: questionNumber, label: String(lines[1]), regex: String(lines[2]), errorMessage: String(lines[3])))
+            }
+        }
+        return customQuestions.sorted()
     }
 
 }

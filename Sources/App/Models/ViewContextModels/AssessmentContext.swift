@@ -12,6 +12,9 @@ final class AssessmentContext: Content {
     let aidEncrypted: String
     let introText: String
     let aboveTitle: String
+    let additionalQuestions: [CustomQuestion]
+    let nameQuestionNumber: Int
+    let emailQuestionNumber: Int
     
     var aidEncryptedForUrl: String {
         aidEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
@@ -70,6 +73,11 @@ final class AssessmentContext: Content {
         self.introText = customIntroText ?? passportModel.intro
 
         self.aboveTitle = (try? ResourceFileManager.readFile("above-title.htm", inPath: path, app: req.application)) ?? ""
+        
+        let path2 = "AdditionalInfo/\(id)"
+        try self.additionalQuestions = ResourceFileManager.customQuestionsFrom(app: req.application, folderPath: path2)
+        nameQuestionNumber = additionalQuestions.count + 9
+        emailQuestionNumber = additionalQuestions.count + 10
     }
     
     

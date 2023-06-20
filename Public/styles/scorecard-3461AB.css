@@ -233,7 +233,7 @@ select{
 }
 
 #qb_error_cs{
-    top:90px;
+   /* top:90px; */
 }
 
 .question_text {
