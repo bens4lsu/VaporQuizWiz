@@ -212,6 +212,7 @@ _overflow:hidden;
     float: right;
     height: 180px;
     margin: 0px 10px 10px 20px;
+    max-width: 30%;
 }
 
 .quiz-report-block-img img {
@@ -484,3 +485,5 @@ h2{
 .qb_res em strong {
 	display: inline;
 }
+
+

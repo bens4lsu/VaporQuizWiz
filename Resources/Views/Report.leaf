@@ -13,7 +13,32 @@
   </style>
   <style type="text/css" scoped="">
        
-        #tblCJPassportSummary { 
+        
+        #divname {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom:80px;
+            text-align: center;
+            display:block;
+        }
+        
+        #divSummaryHeading {
+            height: 230px;
+            background-color: #79A2DF;
+            width: 90%;
+            margin-left:auto;
+            margin-right:auto;
+            font-size: 24pt;
+            text-align:center;
+            color:#fff;
+            padding-top: 85px;
+            max-width: 1100px;
+            border-radius: 10px;
+            line-height: 30pt;;
+        }
+        
+        .tblCJPassportSummary { 
             text-align: center;
             border: 1px solid black;
             border-collapse: collapse;
@@ -33,27 +58,33 @@
             border-right: 1px solid black;
         }
         
-        #tblCJPassportSummary td:nth-child(3) {
+        .tblCJPassportSummary td:nth-child(3) {
             width: 70px;
             background-image: url("/img/right_arrow.png");
             background-repeat: no-repeat;
             background-position: center;
         }
         
-        #tblCJPassportSummary td.arrow-green {
+        .tblCJPassportSummary td.arrow-green {
             background-image: url("/img/green_arrow.png");
+            background-repeat: no-repeat;
+            background-position: center;
         }
         
-        #tblCJPassportSummary td.arrow-yellow {
+        .tblCJPassportSummary td.arrow-yellow {
             background-image: url("/img/yellow_arrow.png");
+            background-repeat: no-repeat;
+            background-position: center;
         }
         
-        #tblCJPassportSummary td.arrow-red {
+        .tblCJPassportSummary td.arrow-red {
             background-image: url("/img/red_arrow.png");
+            background-repeat: no-repeat;
+            background-position: center;
         }
         
         #divSummaryHeading {
-            height: 230px;
+            min-height: 230px;
             background-color: #79A2DF;
             width: 90%;
             margin-left:auto;
@@ -64,7 +95,8 @@
             padding-top: 85px;
             max-width: 1100px;
             border-radius: 10px;
-            line-height: 30pt;;
+            line-height: 30pt;
+            padding-bottom: 45px;
         }
         
         #divname {
@@ -72,6 +104,53 @@
             margin-left: auto;
             margin-right: auto;
             padding-bottom:80px;
+            text-align: center;
+            display:block;
+        }
+        
+        #tblCJPassportSummarySmall {display: none; }
+        
+        @media (max-width: 550px) {
+            #tblCJPassportSummary { display: none; }
+            #tblCJPassportSummarySmall { display: block; top: -45px;}
+            
+            #tblCJPassportSummarySmall td {vertical-align: top; padding-bottom: 30px;}
+            #tblCJPassportSummarySmall td.small-domain-name {padding: 0; border-top: 1px solid black; padding-top: 3px;}
+            
+            .tblCJPassportSummary td.arrow-green {
+                background-image: url("/img/green_arrow.png");
+                background-repeat: no-repeat;
+                background-position: top center;
+                background-size:     contain;
+                min-width: 50px;
+                width:100%;
+                padding-bottom
+            }
+        
+            .tblCJPassportSummary td.arrow-yellow {
+                background-image: url("/img/yellow_arrow.png");
+                background-repeat: no-repeat;
+                background-position: top center;
+                background-size:     contain;
+                min-width: 50px;
+                width:100%;
+            }
+        
+            .tblCJPassportSummary td.arrow-red {
+                background-image: url("/img/red_arrow.png");
+                background-repeat: no-repeat;
+                background-position: top center;
+                background-size:     contain;
+                min-width: 50px;
+                width:100%;
+            }
+            
+            .tblCJPassportSummary { margin-left: auto; margin-right: auto; width: 211px; text-align: center; }
+            
+            .tblCJPassportSummary td:nth-child(3) {
+                background:none;
+            }
+            
         }
         
   </style>
@@ -172,7 +251,9 @@
         <div id="divSummaryHeading" style="page-break-before: always;">
           THANK YOU FOR COMPLETING YOUR #uppercased(passportType) PASSPORT®
         </div>
-        <table id="tblCJPassportSummary">
+        
+        
+        <table id="tblCJPassportSummary" class="tblCJPassportSummary">
           <thead>
             <tr>
               <th>MINDSET</th>
@@ -194,6 +275,20 @@
             
           </tbody>
         </table>
+        
+        <table id="tblCJPassportSummarySmall" class="tblCJPassportSummary">
+            <thead>
+                <tr><th style="padding-left: 4px;">NOW</th><th>&nbsp;</th><th style="padding-right: 4px;">GOAL</th></tr>
+            </thead>
+            <tbody>
+                #for(dd in domainDetails):
+                <tr><td colspan="3" class="small-domain-name">#uppercased(dd.domainType)</td></tr>
+                <tr><td>#(dd.now)</td><td class="arrow-#(dd.result)"></td><td>#(dd.goal)</td></tr>
+                #endfor
+            </tbody>
+        </table>
+
+
         <!--<div id="divname">
           Name: #(takerName)
         </div>-->
