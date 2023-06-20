@@ -51,9 +51,9 @@ struct WebRouteController: RouteCollection {
     
     private func processAssessment(_ req: Request) async throws -> Response {
         let variables = try req.content.decode([String: String].self)
-//        for (key, value) in variables {
-//            print("\(key): \(value)")
-//        }
+        for (key, value) in variables {
+            print("\(key): \(value)")
+        }
         let result = try await ac.processResponse(req, variables: variables)
         switch result {
         case .success(let resultContext):

@@ -151,6 +151,18 @@ class AssessmentController {
                 logger.info("Skipping email send due to configuration.")
             }
         }
+        
+        // save additional info answers to database
+        let additionalFields = assessmentInstanceContext.assessment.additionalQuestions
+        for field in additionalFields {
+            if let answer = variables[field.id] {
+                try await AssessmentAdditionalInfo(assessmentInstanceId: assessmentInstanceContext.id,
+                                                   assessmentId: assessmentInstanceContext.assessment.id,
+                                                   additionalInfoKey: field.id, additionalInfoValue: answer)
+                    .save(on: req.db)
+            }
+        }
+        
         let resultContext = try assessmentInstanceContext.reportContext(req, withDetails: resultRowsContext, host: host)
         return .success(resultContext)
     }
