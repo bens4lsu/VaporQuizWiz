@@ -88,6 +88,15 @@
                     validated = false;
                     $('#err_email').css('display', 'block');
                 }
+                
+                for(pattern of patterns) {
+                    var selector = "#" + pattern.id;
+                    var val = $(selector).val();
+                    if (! pattern.regex.test(val)) {
+                        validated = false;
+                        $('#err_' + pattern.id).css('display', 'block');
+                    }
+                }
             }
             return validated;
         }
@@ -118,6 +127,14 @@
                         
         
         var pageComplete = 0;
+        
+        var patterns = [
+            #for(q in assessment.additionalQuestions):
+                #if(q.regex):
+                    {"id": "#(q.id)", "regex" : /#(q.regex)/ },
+                #endif
+            #endfor 
+        ];
         
         $(document).ready(function() {
             
