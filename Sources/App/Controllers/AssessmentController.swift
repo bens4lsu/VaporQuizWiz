@@ -246,6 +246,7 @@ class AssessmentController {
             let takerEmail: String
             let reportLink: String
             let qaLink: String
+            let assessmentName: String
         }
         
         guard let name = assessmentInstanceContext.name,
@@ -258,7 +259,7 @@ class AssessmentController {
         let subjectContext = SubjectContext(assessmentName: assessmentInstanceContext.assessment.name)
         let reportPdfLink = baseString + assessmentInstanceContext.reportLinkPdf
         let qaPdfLink = baseString + assessmentInstanceContext.qaLinkPdf
-        let bodyContext = BodyContext(takerName: name, takerEmail: email, reportLink: reportPdfLink, qaLink: qaPdfLink)
+        let bodyContext = BodyContext(takerName: name, takerEmail: email, reportLink: reportPdfLink, qaLink: qaPdfLink, assessmentName: assessmentInstanceContext.assessment.name)
         
         async let subjectLineTask = ResourceFileManager.viewToString(req, "EmailSubject", subjectContext)
         async let bodyTask = ResourceFileManager.viewToString(req, "EmailBody", bodyContext)
