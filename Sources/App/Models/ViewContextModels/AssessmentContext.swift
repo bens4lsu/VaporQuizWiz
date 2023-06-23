@@ -75,9 +75,10 @@ final class AssessmentContext: Content {
         self.aboveTitle = (try? ResourceFileManager.readFile("above-title.htm", inPath: path, app: req.application)) ?? ""
         
         let path2 = "AdditionalInfo/\(id)"
-        try self.additionalQuestions = ResourceFileManager.customQuestionsFrom(app: req.application, folderPath: path2)
+        let additionalQuestions = (try? ResourceFileManager.customQuestionsFrom(app: req.application, folderPath: path2)) ?? [CustomQuestion]()
         nameQuestionNumber = additionalQuestions.count + 9
         emailQuestionNumber = additionalQuestions.count + 10
+        self.additionalQuestions = additionalQuestions
     }
     
     
