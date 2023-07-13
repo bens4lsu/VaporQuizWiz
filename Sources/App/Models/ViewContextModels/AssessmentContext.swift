@@ -15,6 +15,8 @@ final class AssessmentContext: Content {
     let additionalQuestions: [CustomQuestion]
     let nameQuestionNumber: Int
     let emailQuestionNumber: Int
+    let reportAdditionalStylesheet: String?
+    let qaAdditionalStylesheet: String?
     
     var aidEncryptedForUrl: String {
         aidEncrypted.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
@@ -48,6 +50,8 @@ final class AssessmentContext: Content {
         self.disclosureText = disclosureText
         self.logoFileName = logoFileName
         self.companyContactInfo = companyContactInfo
+        self.reportAdditionalStylesheet = assessment?.reportAdditionalStylesheet
+        self.qaAdditionalStylesheet = assessment?.qaAdditionalStylesheet
         
         guard let walkaway = passports[.walkaway],
               let expansion = passports[.expansion]

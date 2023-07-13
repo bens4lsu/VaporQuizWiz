@@ -6,6 +6,12 @@
   <base href="#(host.proto)://#(host.server)#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif/" target="_blank">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link rel="stylesheet" href="#(host.proto)://#(host.server)#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif/styles/blessy-sc-nocolor.css?v=01" type="text/css" media="screen">
+  
+  #if(reportAdditionalStylesheet):
+  <link rel="stylesheet" href="#(host.proto)://#(host.server)#if(host.listenOnPort > 0)::#(host.listenOnPort)#endif/styles/#(reportAdditionalStylesheet)" type="text/css" media="screen">
+  #endif
+  
+  
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet">
   <style>
@@ -222,6 +228,8 @@
         </div>
       </div>
       
+      #unsafeHTML(customAfterReportIntro)
+      
       #for(dd in domainDetails):
          <div class="report_paragraph condition99" style="display:block;">
             <div class="container">
@@ -295,7 +303,7 @@
       </div>
       <div class="container">
         <div class="footer-block">
-          #(disclosureText)
+          #unsafeHTML(disclosureText)
         </div>
       </div>
     </div>

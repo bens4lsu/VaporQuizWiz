@@ -70,5 +70,11 @@ class ResourceFileManager {
         }
         return customQuestions.sorted()
     }
+    
+    static func customAfterReportIntro(app: Application, aid: Int) throws -> String {
+        let path = "OutputParagraphs/\(String(aid))"
+        let returnString = try? self.readFile("after-intro.htm", inPath: path, app: app)
+        return returnString ?? ""
+    }
 
 }

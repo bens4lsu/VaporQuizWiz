@@ -27,6 +27,12 @@ final class Assessment: Model, Content, Codable {
     
     @Field(key: "CompanyContactInfo")
     var companyContactInfo: String
+    
+    @Field(key: "ReportAdditionalStylesheet")
+    var reportAdditionalStylesheet: String?
+    
+    @Field(key: "QandAAdditionalStylesheet")
+    var qaAdditionalStylesheet: String?
 
     init() { }
     

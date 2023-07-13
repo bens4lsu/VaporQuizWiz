@@ -24,9 +24,11 @@ final class AssessmentInstanceReportContext: Content, Codable {
     let disclosureText: String
     let takerEmail: String
     let host: ConfigurationSettings.Host
+    let customAfterReportIntro: String
+    let reportAdditionalStylesheet: String?
 
     
-    init(id: Int, assessment: AssessmentContext, takerName: String, takerEmail: String, host: ConfigurationSettings.Host) {
+    init(app: Application, id: Int, assessment: AssessmentContext, takerName: String, takerEmail: String, host: ConfigurationSettings.Host) throws {
         self.id = id
         self.domainDetails = []
         self.assessmentName = assessment.name
@@ -37,16 +39,18 @@ final class AssessmentInstanceReportContext: Content, Codable {
         self.logoFileName = assessment.logoFileName
         self.disclosureText = assessment.disclosureText
         self.takerEmail = takerEmail
+        self.reportAdditionalStylesheet = assessment.reportAdditionalStylesheet
         
         var port = host.listenOnPort
         if host.server != "localhost" && host.server != "127.0.0.1" {   //leaf template takes the port out of the <base> tag if the port < 0
             port = -1
         }
         self.host = ConfigurationSettings.Host(listenOnPort: port, proto: host.proto, server: host.server)
+        self.customAfterReportIntro = try ResourceFileManager.customAfterReportIntro(app: app, aid: assessmentId)
     }
     
-    convenience init(app: Application, id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String, takerEmail: String, host: ConfigurationSettings.Host) {
-        self.init(id: id, assessment: assessment, takerName: takerName, takerEmail: takerEmail, host: host)
+    convenience init(app: Application, id: Int, assessment: AssessmentContext, details: [AssessmentInstanceDetailContext], takerName: String, takerEmail: String, host: ConfigurationSettings.Host) throws {
+        try self.init(app: app, id: id, assessment: assessment, takerName: takerName, takerEmail: takerEmail, host: host)
         self.domainDetails = details
         self.overallDistance = Self.overallDistance(basedOn: details)
         self.overallResult = Self.overallResult(basedOn: details)

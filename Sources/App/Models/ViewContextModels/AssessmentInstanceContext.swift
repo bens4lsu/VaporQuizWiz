@@ -56,6 +56,7 @@ final class AssessmentInstanceContext: Content, Error {
         //self.pageComplete = 0
         self.dateComplete = nil
         self.instanceIdEncrypted = try BenCrypt.encode(String(id), keys: keys)
+
     }
     
     init(_ req: Request, assessmentId aid: Int, instance: Int, passports: Passports, keys: ConfigurationSettings.CryptKeys) async throws {
@@ -77,6 +78,6 @@ final class AssessmentInstanceContext: Content, Error {
             throw Abort (.internalServerError, reason: "Attempt to generate a report context before the assessment taker's name is stored.")
         }
         
-        return AssessmentInstanceReportContext(app: req.application, id: self.id, assessment: self.assessment, details: details, takerName: name, takerEmail: email ?? "", host: host)
+        return try AssessmentInstanceReportContext(app: req.application, id: self.id, assessment: self.assessment, details: details, takerName: name, takerEmail: email ?? "", host: host)
     }
 }
